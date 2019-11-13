@@ -1,5 +1,5 @@
 info.json
-
+.gitignore
 app.db
 migrations/
 venv/
