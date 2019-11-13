@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="jumbotron">
+        <h1 class="text-center">Sentiment Analysis of Political News Titles</h1>
+    </div>
+
+    <!--Section: Content-->
+    <section class="text-center my-5 px-md-5 mx-md-5 dark-grey-text">
+
+        <!--Grid row-->
+        <div class="row d-flex justify-content-center">
+
+            <!--Grid column-->
+            <div class="col-lg-9">
+
+                <p class="h3">
+                    This is a tool that judges the sentiment of news articles to gain a sense of the popularity of
+                    candidates
+                    in the 2020 US presidential election. The tool uses various forms of sentiment analysis to determine
+                    how a candidate is doing.
+                </p>
+
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+    </section>
+    <!--Section: Content-->
+
+    <!--Section: Data-->
+    <section class="text-center my-5 px-md-5 mx-md-5 dark-grey-text">
+
+        <!--Grid row-->
+        <div class="row d-flex justify-content-center">
+
+            <!--Grid column-->
+            <div class="col-lg-9">
+                <h1>Data Sources</h1>
+                <p>
+                    CNN, NYTimes and FOX news article titles are used as the text to analyze.
+                </p>
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+    </section>
+    <!--Section: Data-->
+
+    <!--Section: Methodology-->
+    <section class="text-center  my-5 px-md-5 mx-md-5 dark-grey-text">
+
+        <!--Grid row-->
+        <div class="row d-flex justify-content-center">
+
+            <!--Grid column-->
+            <div class="col-lg-9">
+                <h1>Methodology</h1>
+                <p>
+                    Article titles can be found using:
+                </p>
+            </div>
+            <!--Grid column-->
+
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <p>CNN API</p>
+            <hr>
+            <p>NYTimes API</p>
+            <hr>
+            <p>Fox News API</p>
+            <hr>
+            <p>News API</p>
+        </div>
+        <!--Grid row-->
+    </section>
+    <!--Section: Methodology-->
+
+    <!--Section: Results-->
+    <section class="text-center my-5 px-md-5 mx-md-5 dark-grey-text">
+
+        <!--Grid row-->
+        <div class="row d-flex justify-content-center">
+
+            <!--Grid column-->
+            <div class="col-lg-9">
+                <h1>Results</h1>
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+    </section>
+    <!--Section: Results-->
+
+{% endblock content %}
