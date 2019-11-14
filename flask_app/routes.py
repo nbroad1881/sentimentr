@@ -1,5 +1,5 @@
-from flask_app import app, mail
-from flask import render_template, url_for
+from flask_app import app, mail, db
+from flask import render_template, url_for, jsonify
 from flask_app.models import Article
 from flask_mail import Message
 
@@ -24,6 +24,13 @@ def vader():
     return render_template('vader.html', title='VADER')
 
 
+@app.route('/vader_data')
+def vader_data():
+    info = db.Table('vader_scores', db.metadata, autoload=True, autoload_with=db.engine)
+    results = db.session.query(info).all()
+    return jsonify(results)
+
+
 @app.route('/textblob')
 def textblob():
     return render_template('textblob.html', title='TextBlob')
@@ -37,6 +44,7 @@ def bert():
 @app.route('/lstm')
 def lstm():
     return render_template('lstm.html', title='LSTM')
+
 
 @app.route('/comparison')
 def comparison():
