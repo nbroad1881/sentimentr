@@ -3,6 +3,55 @@
     <div class="jumbotron">
         <h1>All about VADER</h1>
     </div>
+    <canvas id="myChart" width="400" height="400"></canvas>
+    <script>
+        const COMPOUND_INDEX = 8;
+        const DATE_INDEX = 1;
+        var getData = $.get('/vader_data');
+
+
+
+        getData.done(function(results) {
+            console.log(results.lengthgi)
+            const ctx = document.getElementById('myChart').getContext('2d');
+            var compound_values = []
+            var dates = []
+            results.forEach(function (res) {
+                compound_values.push(res[COMPOUND_INDEX])
+                dates.push(new Date(res[DATE_INDEX]))
+            })
+            const data = {
+                    labels: dates,
+                    datasets: [{
+                        label: 'My First dataset',
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: compound_values
+                    }]
+                }
+            const options = {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: data,
+
+                // Configuration options go here
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            }
+                        }]
+                    }
+                }
+            }
+            var myChart = new Chart(ctx, options);
+        })
+
+    </script>
 
 
 {% endblock content %}
