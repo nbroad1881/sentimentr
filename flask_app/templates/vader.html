@@ -1,43 +1,61 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="jumbotron">
-        <h1>All about VADER</h1>
+    <h1 class="text-center">All about VADER</h1>
+    <div class="container d-flex justify-content-center">
+        <div style="position: relative; height:60vh; width:60vw">
+            <canvas id="myChart" style="background-color: white"></canvas>
+        </div>
     </div>
-    <canvas id="myChart" width="400" height="400"></canvas>
+
     <script>
         const COMPOUND_INDEX = 8;
         const DATE_INDEX = 1;
+        const TITLE_INDEX = 2;
         var getData = $.get('/vader_data');
 
 
-
-        getData.done(function(results) {
-            console.log(results.lengthgi)
+        getData.done(function (results) {
+            console.log(results.length);
             const ctx = document.getElementById('myChart').getContext('2d');
-            var compound_values = []
-            var dates = []
+            var compound_values = [];
+            var dates = [];
+            var titles = [];
             results.forEach(function (res) {
-                compound_values.push(res[COMPOUND_INDEX])
-                dates.push(new Date(res[DATE_INDEX]))
-            })
+                compound_values.push(res[COMPOUND_INDEX]);
+                dates.push(new Date(res[DATE_INDEX]));
+                titles.push(res[TITLE_INDEX]);
+            });
             const data = {
-                    labels: dates,
-                    datasets: [{
-                        label: 'My First dataset',
-                        backgroundColor: 'rgb(255, 255, 255)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: compound_values
-                    }]
-                }
+                labels: dates,
+                datasets: [{
+                    label: 'CNN Sentiment',
+                    fill: false,
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: compound_values
+                }]
+            };
             const options = {
                 // The type of chart we want to create
                 type: 'line',
 
                 // The data for our dataset
                 data: data,
+                aspectRatio: 2,
 
                 // Configuration options go here
                 options: {
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                console.log(tooltipItem)
+                                console.log(typeof tooltipItem)
+                                var datasetLabel = tooltipItem.value;
+                                var title = titles[tooltipItem.index];
+                                console.log(title)
+                                return '(' + datasetLabel + ') '  + title;
+                            }
+                        }
+                    },
                     scales: {
                         xAxes: [{
                             type: 'time',
@@ -47,7 +65,7 @@
                         }]
                     }
                 }
-            }
+            };
             var myChart = new Chart(ctx, options);
         })
 
