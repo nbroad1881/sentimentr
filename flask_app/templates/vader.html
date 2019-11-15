@@ -15,7 +15,6 @@
 
 
         getData.done(function (results) {
-            console.log(results.length);
             const ctx = document.getElementById('myChart').getContext('2d');
             var compound_values = [];
             var dates = [];
@@ -47,11 +46,8 @@
                     tooltips: {
                         callbacks: {
                             label: function (tooltipItem, data) {
-                                console.log(tooltipItem)
-                                console.log(typeof tooltipItem)
                                 var datasetLabel = tooltipItem.value;
                                 var title = titles[tooltipItem.index];
-                                console.log(title)
                                 return '(' + datasetLabel + ') '  + title;
                             }
                         }
