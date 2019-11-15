@@ -1,7 +1,12 @@
+from datetime import datetime, timedelta
+
 from flask_app import app, mail, db
 from flask import render_template, url_for, jsonify
 from flask_app.models import Article
 from flask_mail import Message
+
+DEFAULT_TIME_BACK = timedelta(days=14)
+DEFAULT_DATA_POINTS_LIMIT = 50
 
 
 @app.route('/')
@@ -26,8 +31,20 @@ def vader():
 
 @app.route('/vader_data')
 def vader_data():
+    """
+    returns data as json.
+    currently gets results one week in the past
+    :return:
+    """
     info = db.Table('vader_scores', db.metadata, autoload=True, autoload_with=db.engine)
-    results = db.session.query(info).all()
+    today = datetime.utcnow()
+    other_date = datetime.utcnow() - DEFAULT_TIME_BACK
+
+    # filter(info.c.date.between(other_date, today)).\
+    results = db.session.query(info).\
+        order_by(info.c.date.desc()).\
+        limit(DEFAULT_DATA_POINTS_LIMIT).all()
+
     return jsonify(results)
 
 
