@@ -37,7 +37,10 @@ getData.done(function (results) {
                         let news_co = news_companies[index];
                         let score = tooltipItems[0].value;
                         let date = dates[index];
-                        let hour_min = date.getHours() + ':' + date.getMinutes();
+                        let minutes = date.getMinutes();
+                        if (minutes < 10){}
+                            minutes = '0'+String(minutes)
+                        let hour_min = date.getHours() + ':' + minutes;
 
                         return roundToTwo(score) + ' - ' + news_co + ' - ' + date.toDateString() + ' ' + hour_min;
                     },
