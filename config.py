@@ -10,7 +10,12 @@ class Config(object):
         LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
         SQLALCHEMY_TRACK_MODIFICATIONS = False
     else:
-        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+        ENDPOINT = os.environ.get('ENDPOINT')
+        PORT = os.environ.get('PORT')
+        USER = os.environ.get('USERNAME')
+        PW = os.environ.get('PASSWORD')
+        DBNAME = os.environ.get('DBNAME')
+        SQLALCHEMY_DATABASE_URI = f"postgres://{USER}:{PW}@{ENDPOINT}:{PORT}/{DBNAME}"
         LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
         SQLALCHEMY_TRACK_MODIFICATIONS = False
         SECRET_KEY = 'will-change-one-day'
