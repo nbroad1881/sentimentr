@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
+import json
 
-from flask_app import app, mail, db
+from flask_app import app, db
 from flask import render_template, url_for, jsonify
-from flask_app.models import Article
+from flask_app.models import Article, Score
 from flask_mail import Message
 
 DEFAULT_TIME_BACK = timedelta(days=14)
@@ -28,6 +29,36 @@ def bagofwords():
 def vader():
     return render_template('vader.html', title='VADER')
 
+
+@app.route('/news/<agency>')
+def news(agency):
+    # For pages about news agencies
+    return ''
+
+@app.route('/models/<model>')
+def model_page(model):
+    return render_template('model.html', model=model)
+
+@app.route('/data/<model>', methods=['GET', 'POST'])
+def data(model):
+    """
+    Finds the corresponding data requested for the given model.
+    :return: JSON
+    """
+    if request.method == 'POST':
+        post_data = request.data #specifying data range, news agency etc.
+    if request.method == 'GET':
+
+    #     get default data
+        pass
+
+    return ''
+
+@app.route('/data_test')
+def data_test():
+    results = db.session.query(Article). order_by(Article.datetime.desc()).\
+        limit(DEFAULT_DATA_POINTS_LIMIT).all()
+    return jsonify([r.to_dict()for r in results])
 
 @app.route('/vader_data')
 def vader_data():

@@ -15,7 +15,7 @@ app.config.from_object(Config)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-mail = Mail(app)
+# mail = Mail(app)
 
 # if not app.debug:
 #     if app.config['MAIL_SERVER']:
