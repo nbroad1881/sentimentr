@@ -1,99 +1,314 @@
-{% extends "layout.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
 
-    <div class="jumbotron">
-        <h1 class="text-center">Sentiment Analysis of Political News Titles</h1>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Sentinews</title>
+
+    <!-- Font Awesome Icons -->
+    <link href="{{ url_for("static", filename="vendor/fontawesome-free/css/all.min.css") }}" rel="stylesheet"
+          type="text/css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic'
+          rel='stylesheet' type='text/css'>
+
+    <!-- Plugin CSS -->
+    <link href="{{ url_for("static", filename="vendor/magnific-popup/magnific-popup.css") }}" rel="stylesheet">
+
+    <!-- Theme CSS - Includes Bootstrap -->
+    <link href="{{ url_for("static", filename="css/creative.css") }}" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+</head>
+
+<body id="page-top">
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Sentinews</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto my-2 my-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#services">Models</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Masthead -->
+<header class="masthead">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center justify-content-center text-center">
+            <div class="col-lg-10 align-self-end">
+                <h1 class="text-uppercase text-white font-weight-bold">Sentinews</h1>
+                <hr class="divider my-4">
+            </div>
+            <div class="col-lg-8 align-self-baseline">
+                <p class="text-white font-weight-light mb-5">A sentiment analysis tool to see bias in media titles for
+                    2020 presidential candidates</p>
+                <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find Out More</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- About Section -->
+<section class="page-section bg-primary" id="about">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+
+                <h4 class="text-white my-5 ">Sentinews is a project by Nicholas Broad done in collaboration with
+                    SharpestMinds under the guidance of Tomas Babej. The goal of the project is to see which news
+                    agencies have a bias toward certain candidates, and if trends in popularity of candidates can be
+                    seen in title sentiments.</h4>
+                <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">Models used</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="page-section py-5" id="services">
+    <div class="container">
+        <h2 class="text-center mt-0">Models</h2>
+        <hr class="divider my-4">
+        <div class="row my-0">
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="mt-1">
+                    <i class="fas fa-4x fa-splotch text-primary mb-4"></i>
+                    <h3 class="h4 mb-2">TextBlob</h3>
+                    <p class="text-muted mb-0">"A simple API for diving into common natural language processing (NLP)
+                        tasks such as part-of-speech tagging, noun phrase extraction, sentiment analysis,
+                        classification, translation, and more."</p><a href='https://textblob.readthedocs.io/'>TextBlob
+                    Homepage</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="mt-1">
+                    <i class="fab fa-4x fa-empire text-primary mb-4"></i>
+                    <h3 class="h4 mb-2">VADER</h3>
+                    <p class="text-muted mb-0">"(Valence Aware Dictionary and sEntiment Reasoner) - a lexicon and
+                        rule-based sentiment analysis tool that is specifically attuned to sentiments expressed in
+                        social media, and works well on texts from other domains."</p><a
+                        href='https://github.com/cjhutto/vaderSentiment'>VADER Homepage</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="mt-1">
+                    <i class="fas fa-4x fa-undo-alt text-primary mb-4"></i>
+                    <h3 class="h4 mb-2">LSTM</h3>
+                    <p class="text-muted mb-0">(Long Short-Term Memory) - a type of artificial recurrent neural network
+                        that has feedback connections to allow for understanding of long sequences of words.</p><a
+                        href='https://en.wikipedia.org/wiki/Long_short-term_memory'>LSTM wiki</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="mt-1">
+                    <i class="fas fa-4x fa-arrows-alt-h text-primary mb-4"></i>
+                    <h3 class="h4 mb-2">BERT</h3>
+                    <p class="text-muted mb-0">"(Bidirectional Encoder Representations from Transformers) - a model
+                        designed to pre-train on both left and right context in all layers and then be fine-tuned with
+                        just one additional output layer to create state-of-the-art models."</p><a
+                        href="https://arxiv.org/abs/1810.04805">BERT Paper</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row my-5 text-center">
+            <a class="btn btn-dark btn-xl mx-auto js-scroll-trigger " href="#results">See results</a>
+        </div>
+    </div>
+</section>
+
+
+<section class="page-section bg-info" id='results'>
+    <div class="container">
+        <h2 class="text-center mt-0">Results</h2>
+        <hr class="divider my-4">
+        <div class="row  justify-content-center">
+            <div class='col-lg-3'>
+                <a class="btn btn-light d-flex justify-content-center" id="textblob">TextBlob</a>
+            </div>
+            <div class='col-lg-3'>
+                <a class="btn btn-light d-flex justify-content-center" id="vader">Vader</a>
+            </div>
+            <div class='col-lg-3'>
+                <a class="btn btn-light d-flex justify-content-center" id="lstm">LSTM</a>
+            </div>
+            <div class='col-lg-3 '>
+                <a class="btn btn-light d-flex justify-content-center" id="all-models">ALL</a>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <div style="position: relative; height:100vh; width:100vw">
+                <canvas class="p-3" id="myChart" style="background-color: white"></canvas>
+            </div>
+        </div>
     </div>
 
-    <!--Section: Content-->
-    <section class="text-center my-5 px-md-5 mx-md-5 dark-grey-text">
+</section>
 
-        <!--Grid row-->
-        <div class="row d-flex justify-content-center">
 
-            <!--Grid column-->
-            <div class="col-lg-9">
+<!--Portfolio Section -->
+<!-- <section id="portfolio">
+  <div class="container-fluid p-0">
+    <div class="row no-gutters">
+      <div class="col-lg-4 col-sm-6">
+        <a class="portfolio-box" href="img/portfolio/fullsize/1.jpg">
+          <img class="img-fluid" src="img/portfolio/thumbnails/1.jpg" alt="">
+          <div class="portfolio-box-caption">
+            <div class="project-category text-white-50">
+              Category
+            </div>
+            <div class="project-name">
+              Project Name
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-4 col-sm-6">
+        <a class="portfolio-box" href="img/portfolio/fullsize/2.jpg">
+          <img class="img-fluid" src="img/portfolio/thumbnails/2.jpg" alt="">
+          <div class="portfolio-box-caption">
+            <div class="project-category text-white-50">
+              Category
+            </div>
+            <div class="project-name">
+              Project Name
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-4 col-sm-6">
+        <a class="portfolio-box" href="img/portfolio/fullsize/3.jpg">
+          <img class="img-fluid" src="img/portfolio/thumbnails/3.jpg" alt="">
+          <div class="portfolio-box-caption">
+            <div class="project-category text-white-50">
+              Category
+            </div>
+            <div class="project-name">
+              Project Name
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-4 col-sm-6">
+        <a class="portfolio-box" href="img/portfolio/fullsize/4.jpg">
+          <img class="img-fluid" src="img/portfolio/thumbnails/4.jpg" alt="">
+          <div class="portfolio-box-caption">
+            <div class="project-category text-white-50">
+              Category
+            </div>
+            <div class="project-name">
+              Project Name
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-4 col-sm-6">
+        <a class="portfolio-box" href="img/portfolio/fullsize/5.jpg">
+          <img class="img-fluid" src="img/portfolio/thumbnails/5.jpg" alt="">
+          <div class="portfolio-box-caption">
+            <div class="project-category text-white-50">
+              Category
+            </div>
+            <div class="project-name">
+              Project Name
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-4 col-sm-6">
+        <a class="portfolio-box" href="img/portfolio/fullsize/6.jpg">
+          <img class="img-fluid" src="img/portfolio/thumbnails/6.jpg" alt="">
+          <div class="portfolio-box-caption p-3">
+            <div class="project-category text-white-50">
+              Category
+            </div>
+            <div class="project-name">
+              Project Name
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div> -->
+<!-- </section> -->
 
-                <p class="h3">
-                    This is a tool that judges the sentiment of news articles to gain a sense of the popularity of
-                    candidates
-                    in the 2020 US presidential election. The tool uses various forms of sentiment analysis to determine
-                    how a candidate is doing.
-                </p>
+
+<!-- Contact Section -->
+<section class="page-section" id="contact">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="mt-0">Contact</h2>
+                <hr class="divider my-4">
 
             </div>
-            <!--Grid column-->
-
         </div>
-        <!--Grid row-->
-    </section>
-    <!--Section: Content-->
-
-    <!--Section: Data-->
-    <section class="text-center my-5 px-md-5 mx-md-5 dark-grey-text">
-
-        <!--Grid row-->
-        <div class="row d-flex justify-content-center">
-
-            <!--Grid column-->
-            <div class="col-lg-9">
-                <h1>Data Sources</h1>
-                <p>
-                    CNN, NYTimes and FOX news article titles are used as the text to analyze.
-                </p>
+        <div class="row">
+            <div class="col-lg-4 ml-auto text-center mb-5 mb-lg-0">
+                <i class="fab fa-linkedin fa-3x mb-3 text-muted"></i>
+                <div>LinkedIn</div>
             </div>
-            <!--Grid column-->
-
-        </div>
-        <!--Grid row-->
-    </section>
-    <!--Section: Data-->
-
-    <!--Section: Methodology-->
-    <section class="text-center  my-5 px-md-5 mx-md-5 dark-grey-text">
-
-        <!--Grid row-->
-        <div class="row d-flex justify-content-center">
-
-            <!--Grid column-->
-            <div class="col-lg-9">
-                <h1>Methodology</h1>
-                <p>
-                    Article titles can be found using:
-                </p>
+            <div class="col-lg-4 mr-auto text-center">
+                <i class="fas fa-envelope fa-3x mb-3 text-muted"></i>
+                <!-- Make sure to change the email address in anchor text AND the link below! -->
+                <a class="d-block" href="mailto:contact@yourwebsite.com">contact@yourwebsite.com</a>
             </div>
-            <!--Grid column-->
-
         </div>
+    </div>
+</section>
 
-        <div class="row d-flex justify-content-center">
-            <p>CNN API</p>
-            <hr>
-            <p>NYTimes API</p>
-            <hr>
-            <p>Fox News API</p>
-            <hr>
-            <p>News API</p>
-        </div>
-        <!--Grid row-->
-    </section>
-    <!--Section: Methodology-->
+<!-- Footer -->
+<footer class="bg-light py-5">
+    <div class="container">
+        <div class="small text-center text-muted">Copyright &copy; 2019</div>
+    </div>
+</footer>
 
-    <!--Section: Results-->
-    <section class="text-center my-5 px-md-5 mx-md-5 dark-grey-text">
 
-        <!--Grid row-->
-        <div class="row d-flex justify-content-center">
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="{{ url_for("static", filename="vendor/jquery/jquery.min.js") }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="{{ url_for("static", filename="vendor/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
 
-            <!--Grid column-->
-            <div class="col-lg-9">
-                <h1>Results</h1>
-            </div>
-            <!--Grid column-->
+<!-- Plugin JavaScript -->
+<script type="text/javascript" src="{{ url_for("static", filename="vendor/jquery-easing/jquery.easing.min.js") }}"></script>
+<script type="text/javascript" src="{{ url_for("static", filename="vendor/magnific-popup/jquery.magnific-popup.min.js") }}"></script>
 
-        </div>
-        <!--Grid row-->
-    </section>
-    <!--Section: Results-->
+<!-- Custom scripts for this template -->
+<script type="text/javascript" src="{{ url_for("static", filename="js/creative.min.js") }}"></script>
+<script type="text/javascript" src="{{ url_for("static", filename="js/chart_plotter.js") }}"></script>
 
-{% endblock content %}
+</body>
+
+</html>
+
+
+
+
