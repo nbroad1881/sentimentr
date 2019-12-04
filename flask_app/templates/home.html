@@ -24,11 +24,14 @@
 
     <!-- Theme CSS - Includes Bootstrap -->
     <link href="{{ url_for("static", filename="css/creative.css") }}" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
-    <script
-            src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
+
+    <!--    Chart JS    -->
+    <script src="{{ url_for("static", filename="vendor/chart/Chart.bundle.min.js") }}"></script>
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>#}
+    {#    <script#}
+    {#            src="https://code.jquery.com/jquery-3.4.1.min.js"#}
+    {#            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="#}
+    {#            crossorigin="anonymous"></script>#}
 </head>
 
 <body id="page-top">
@@ -143,119 +146,38 @@
 </section>
 
 
-<section class="page-section bg-info" id='results'>
+<section class="page-section bg-info pt-4" id='results'>
     <div class="container">
         <h2 class="text-center mt-0">Results</h2>
+{#                  Date Start: <input type="date" name="date-start">#}
+{#                  Date End: <input type="date" name="date-end">#}
+                    Sample Sentence: <input type="text" name="sample" id="text-field">
+                  <label class='btn btn-dark text-center' id="text-button">Submit</label><br>
+            </form>
         <hr class="divider my-4">
-        <div class="row  justify-content-center">
-            <div class='col-lg-3'>
-                <a class="btn btn-light d-flex justify-content-center" id="textblob">TextBlob</a>
-            </div>
-            <div class='col-lg-3'>
-                <a class="btn btn-light d-flex justify-content-center" id="vader">Vader</a>
-            </div>
-            <div class='col-lg-3'>
-                <a class="btn btn-light d-flex justify-content-center" id="lstm">LSTM</a>
-            </div>
-            <div class='col-lg-3 '>
-                <a class="btn btn-light d-flex justify-content-center" id="all-models">ALL</a>
-            </div>
+            <div class="text-center btn-group-lg btn-group-toggle" data-toggle="buttons" >
+
+                 <label class="text-center  d-inline btn btn-light btn-outline-primary mx-4 active" id="textblob">
+                    <input class="text-center" type="radio" name="options" id="textblob-btn" checked> TextBlob</label>
+
+                 <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="vader">
+                    <input class="text-center" type="radio" name="options" id="vader-btn"> Vader</label>
+
+                 <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="lstm">
+                    <input class="text-center" type="radio" name="options" id="lstm-btn"> LSTM</label>
+
+                 <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="all-models">
+                    <input class="text-center" type="radio" name="options" id="option4"> All Models</label>
+
         </div>
         <div class="d-flex justify-content-center mt-3">
-            <div style="position: relative; height:100vh; width:100vw">
+            <div style="position: relative; height:70vh; width:100vw">
                 <canvas class="p-3" id="myChart" style="background-color: white"></canvas>
             </div>
         </div>
     </div>
 
 </section>
-
-
-<!--Portfolio Section -->
-<!-- <section id="portfolio">
-  <div class="container-fluid p-0">
-    <div class="row no-gutters">
-      <div class="col-lg-4 col-sm-6">
-        <a class="portfolio-box" href="img/portfolio/fullsize/1.jpg">
-          <img class="img-fluid" src="img/portfolio/thumbnails/1.jpg" alt="">
-          <div class="portfolio-box-caption">
-            <div class="project-category text-white-50">
-              Category
-            </div>
-            <div class="project-name">
-              Project Name
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6">
-        <a class="portfolio-box" href="img/portfolio/fullsize/2.jpg">
-          <img class="img-fluid" src="img/portfolio/thumbnails/2.jpg" alt="">
-          <div class="portfolio-box-caption">
-            <div class="project-category text-white-50">
-              Category
-            </div>
-            <div class="project-name">
-              Project Name
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6">
-        <a class="portfolio-box" href="img/portfolio/fullsize/3.jpg">
-          <img class="img-fluid" src="img/portfolio/thumbnails/3.jpg" alt="">
-          <div class="portfolio-box-caption">
-            <div class="project-category text-white-50">
-              Category
-            </div>
-            <div class="project-name">
-              Project Name
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6">
-        <a class="portfolio-box" href="img/portfolio/fullsize/4.jpg">
-          <img class="img-fluid" src="img/portfolio/thumbnails/4.jpg" alt="">
-          <div class="portfolio-box-caption">
-            <div class="project-category text-white-50">
-              Category
-            </div>
-            <div class="project-name">
-              Project Name
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6">
-        <a class="portfolio-box" href="img/portfolio/fullsize/5.jpg">
-          <img class="img-fluid" src="img/portfolio/thumbnails/5.jpg" alt="">
-          <div class="portfolio-box-caption">
-            <div class="project-category text-white-50">
-              Category
-            </div>
-            <div class="project-name">
-              Project Name
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6">
-        <a class="portfolio-box" href="img/portfolio/fullsize/6.jpg">
-          <img class="img-fluid" src="img/portfolio/thumbnails/6.jpg" alt="">
-          <div class="portfolio-box-caption p-3">
-            <div class="project-category text-white-50">
-              Category
-            </div>
-            <div class="project-name">
-              Project Name
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div> -->
-<!-- </section> -->
 
 
 <!-- Contact Section -->
@@ -269,14 +191,17 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4 ml-auto text-center mb-5 mb-lg-0">
-                <i class="fab fa-linkedin fa-3x mb-3 text-muted"></i>
-                <div>LinkedIn</div>
+            <div class="col-lg-4 ml-auto text-center">
+                <a href="https://www.linkedin.com/in/nicholas-broad-7a530263" class="d-block">
+                    <i class="fab fa-linkedin fa-3x mb-3 text-muted"></i>
+                </a>
+                <a class="d-block" href="https://www.linkedin.com/in/nicholas-broad-7a530263">LinkedIn</a>
             </div>
             <div class="col-lg-4 mr-auto text-center">
-                <i class="fas fa-envelope fa-3x mb-3 text-muted"></i>
-                <!-- Make sure to change the email address in anchor text AND the link below! -->
-                <a class="d-block" href="mailto:contact@yourwebsite.com">contact@yourwebsite.com</a>
+                <a href="mailto:nicholas@nmbroad.com" class="d-block">
+                    <i class="fas fa-envelope fa-3x mb-3 text-muted"></i>
+                </a>
+                <a class="d-block" href="mailto:nicholas@nmbroad.com">nicholas@nmbroad.com</a>
             </div>
         </div>
     </div>
@@ -295,11 +220,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
-<script type="text/javascript" src="{{ url_for("static", filename="vendor/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
+{#<script type="text/javascript" src="{{ url_for("static", filename="vendor/popper/popper.min.js") }}"></script>#}
+<script type="text/javascript"
+        src="{{ url_for("static", filename="vendor/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
 
 <!-- Plugin JavaScript -->
-<script type="text/javascript" src="{{ url_for("static", filename="vendor/jquery-easing/jquery.easing.min.js") }}"></script>
-<script type="text/javascript" src="{{ url_for("static", filename="vendor/magnific-popup/jquery.magnific-popup.min.js") }}"></script>
+<script type="text/javascript"
+        src="{{ url_for("static", filename="vendor/jquery-easing/jquery.easing.min.js") }}"></script>
+<script type="text/javascript"
+        src="{{ url_for("static", filename="vendor/magnific-popup/jquery.magnific-popup.min.js") }}"></script>
 
 <!-- Custom scripts for this template -->
 <script type="text/javascript" src="{{ url_for("static", filename="js/creative.min.js") }}"></script>
