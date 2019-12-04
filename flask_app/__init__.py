@@ -6,15 +6,16 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
-
+# from sentinews.models.lstm import LSTMAnalyzer
 
 from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+# lstm = LSTMAnalyzer()
 # mail = Mail(app)
 
 # if not app.debug:
