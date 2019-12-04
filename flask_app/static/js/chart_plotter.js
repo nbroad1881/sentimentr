@@ -1,3 +1,8 @@
+const TEXTBLOB = 1;
+const VADER = 2;
+const LSTM = 3;
+const BERT = 4;
+const ALL_MODELS = 9;
 
 var getData = $.get('/data_test');
 var chart_data;
@@ -7,18 +12,17 @@ var chart;
 getData.done(function (results) {
     chart_data = results;
     const ctx = document.getElementById('myChart').getContext('2d');
-    var dates = [];
-    var titles = [];
-    var news_companies = [];
+    const dates = [];
+    const titles = [];
+    const news_companies = [];
     results.forEach(function (res) {
         dates.push(new Date(res['datetime']));
         titles.push(res['title']);
         news_companies.push(res['news_co']);
     });
-    console.log(dates[0]);
     const data = {
         labels: dates,
-        datasets: createDatasets(1)
+        datasets: createDatasets(TEXTBLOB)
     };
     const options = {
         // The type of chart we want to create
@@ -83,88 +87,85 @@ function roundToTwo(num) {
 }
 
 function createDatasets(chartNum) {
-    var datasets = [];
+    let new_label;
+    let new_color;
+    let new_key;
+    let new_fill = false;
+
     switch (chartNum) {
-        case (1):
-            datasets.push({
-                label: 'TextBlob Scores',
-                fill: false,
-                borderColor: "rgba(192, 57, 43, 1)",
-                backgroundColor: "rgba(192, 57, 43, 1)",
-                data: []
-            });
-            chart_data.forEach((row) => {
-                datasets[0].data.push(row['textblob_polarity'])
-            });
-            return datasets;
-
-        case (2):
-            datasets.push({
-                label: 'Vader Scores',
-                fill: false,
-                borderColor: "rgba(104, 192, 43, 1)",
-                backgroundColor: "rgba(104, 192, 43, 1)",
-                data: []
-            });
-            chart_data.forEach((row) => {
-                datasets[0].data.push(row['vader_compound'])
-            });
-            return datasets;
-        case (3):
-            datasets.push({
-                label: 'LSTM Scores',
-                fill: false,
-                borderColor: "rgba(43, 178, 192, 1)",
-                backgroundColor: "rgba(43, 178, 192, 1)",
-                data: []
-            });
-            chart_data.forEach((row) => {
-                datasets[0].data.push(row['lstm_score'])
-            });
-            return datasets;
-        case (4):
-            color = "rgba(131, 43, 192, 1)";
+        case (TEXTBLOB):
+            new_label = 'TextBlob Scores';
+            new_color = "rgba(192, 57, 43, 1)";
+            new_key = 'textblob_polarity';
             break;
-        case (5):
-            return [createDatasets(1)[0], createDatasets(2)[0], createDatasets(3)[0]]
+        case (VADER):
+            new_label = 'Vader Scores';
+            new_color = "rgba(104, 192, 43, 1)";
+            new_key = 'vader_compound';
+            break;
+        case (LSTM):
+            new_label = 'LSTM Scores';
+            new_color = "rgba(43, 178, 192, 1)";
+            new_key = 'lstm_score';
+            break;
 
+        case (BERT):
+            new_color = "rgba(131, 43, 192, 1)";
+            break;
+        case (ALL_MODELS):
+            return [createDatasets(TEXTBLOB)[0], createDatasets(VADER)[0], createDatasets(LSTM)[0]];
     }
+    let new_data = [];
+        chart_data.forEach((row) => {
+                new_data.push(row[new_key])
+            });
+
+        return [{
+                label: new_label,
+                fill: new_fill,
+                borderColor: new_color,
+                backgroundColor: new_color,
+                data: new_data
+        }];
 }
 
 function updateChart(chartNum) {
     chart.options.legend.display = false;
-    if (chartNum === 1) {
-        chart.data.datasets = createDatasets(1);
-        console.log(chart.data.datasets[0]);
-        chart.options.title.text = 'TextBlob Scores';
-    } else if (chartNum === 2) {
-        chart.data.datasets = createDatasets(2);
-        chart.options.title.text = 'Vader Scores';
-    } else if (chartNum === 3) {
-        chart.data.datasets = createDatasets(3);
-        chart.options.title.text = 'LSTM Scores';
-    } else if (chartNum === 5) {
-        chart.data.datasets = createDatasets(5);
-        chart.options.title.text = 'All Models';
-        chart.options.legend.display = true;
+    switch (chartNum){
+        case(TEXTBLOB):
+            chart.options.title.text = 'TextBlob Scores';
+            break;
+        case(VADER):
+            chart.options.title.text = 'Vader Scores';
+            break;
+        case(LSTM):
+            chart.options.title.text = 'LSTM Scores';
+            break;
+        case(ALL_MODELS):
+            chart.options.title.text = 'All Models';
+            chart.options.legend.display = true;
+            break;
+        default:
+            chart.options.title.text = 'TextBlob Scores';
+            break;
     }
+    chart.data.datasets = createDatasets(chartNum);
     chart.update();
 }
 
 
 $("#textblob").click(function () {
     console.log('1');
-    updateChart(1);
+    updateChart(TEXTBLOB);
 });
 $("#vader").click(function () {
     console.log('2');
-    updateChart(2);
+    updateChart(VADER);
 });
 $("#lstm").click(function () {
     console.log('3');
-    updateChart(3);
+    updateChart(LSTM);
 });
 $("#all-models").click(function () {
-    console.log('4');
-    updateChart(5);
+    updateChart(ALL_MODELS);
 });
