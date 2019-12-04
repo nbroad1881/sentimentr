@@ -4,9 +4,17 @@ const LSTM = 3;
 const BERT = 4;
 const ALL_MODELS = 9;
 
-var getData = $.get('/data_test');
-var chart_data;
-var chart;
+let getData = $.get('/data_test');
+let chart_data;
+let chart;
+
+$("#text-button").click(function(){
+    let model = $('label.active').text().trim();
+    let text_field = $('#text-field').val();
+    $.post("/analyze/textblob", {text: text_field}, function(data){
+        console.log(data);
+    });
+});
 
 
 getData.done(function (results) {
