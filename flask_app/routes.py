@@ -2,12 +2,16 @@ from datetime import datetime, timedelta
 import json
 
 from flask_app import app, db
-from flask import render_template, url_for, jsonify
+from flask import render_template, url_for, jsonify, request
 from flask_app.models import Article, Score
+from flask_app.forms import PostForm
 from flask_mail import Message
+from sentinews.models.vader import VaderAnalyzer
+from sentinews.models.textblob import TextBlobAnalyzer
 
 DEFAULT_TIME_BACK = timedelta(days=14)
 DEFAULT_DATA_POINTS_LIMIT = 50
+
 
 
 @app.route('/')
@@ -45,7 +49,12 @@ def data(model):
     Finds the corresponding data requested for the given model.
     :return: JSON
     """
+    models = {
+        'vader': VaderAnalyzer(),
+        'textblob': TextBlobAnalyzer(),
+    }
     if request.method == 'POST':
+
         post_data = request.data #specifying data range, news agency etc.
     if request.method == 'GET':
 
@@ -54,9 +63,20 @@ def data(model):
 
     return ''
 
+@app.route('/analyze/<model>', methods=['POST'])
+def analyze(model):
+    models = {
+        'vader': VaderAnalyzer(),
+        'textblob': TextBlobAnalyzer(),
+    }
+    req = request.form['text']
+
+    if model in models:
+        return jsonify(models[model].evaluate([req]))
+
 @app.route('/data_test')
 def data_test():
-    results = db.session.query(Article). order_by(Article.datetime.desc()).\
+    results = db.session.query(Article).order_by(Article.datetime.desc()).\
         limit(DEFAULT_DATA_POINTS_LIMIT).all()
     return jsonify([r.to_dict()for r in results])
 
