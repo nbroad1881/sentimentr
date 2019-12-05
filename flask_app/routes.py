@@ -111,6 +111,8 @@ def bert():
 
 @app.route('/lstm')
 def lstm():
+    from sentinews.models.lstm import LSTMAnalyzer
+    lstm = LSTMAnalyzer()
     return render_template('lstm.html', title='LSTM')
 
 
