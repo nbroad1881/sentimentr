@@ -19,7 +19,10 @@ class Article(db.Model):
     textblob_classification = db.Column(db.String(10))
     textblob_p_pos = db.Column(db.Float)
     textblob_p_neg = db.Column(db.Float)
-    lstm_score = db.Column(db.Float)
+    lstm_category = db.Column(db.String(15))
+    lstm_p_neu = db.Column(db.Float)
+    lstm_p_pos = db.Column(db.Float)
+    lstm_p_neg = db.Column(db.Float)
 
     def to_dict(self):
         return {
@@ -37,7 +40,10 @@ class Article(db.Model):
             'textblob_classification': self.textblob_classification,
             'textblob_p_pos': self.textblob_p_pos,
             'textblob_p_neg': self.textblob_p_neg,
-            'lstm_score': self.lstm_score
+            'lstm_category': self.lstm_category,
+            'lstm_p_neu': self.lstm_p_neu,
+            'lstm_p_pos': self.lstm_p_pos,
+            'lstm_p_neg': self.lstm_p_neg,
         }
 
 
