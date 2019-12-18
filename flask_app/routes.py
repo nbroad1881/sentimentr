@@ -6,8 +6,6 @@ from fastai.text import *
 from flask_app import app, db
 from flask import render_template, url_for, jsonify, request
 from flask_app.models import Article, Score
-# from flask_app.forms import PostForm
-from flask_mail import Message
 from sentinews.models.vader import VaderAnalyzer
 from sentinews.models.textblob import TextBlobAnalyzer
 from sentinews.models.lstm import LSTMAnalyzer
@@ -18,18 +16,12 @@ DEFAULT_DATA_POINTS_LIMIT = 50
 import os
 
 dirname = os.path.dirname(__file__)
-print(dirname)
-path = os.path.join(dirname, 'static/lstm_models/')
-# print(path)
-# lstm = load_learner(path, 'first_model.pkl')
-# print(str(lstm.predict('What a glorious day for our fine leader, Donald Trump')[2][1]))
-# print(lstm.predict('Elizabeth Warren rallies great support in Michigan'))
-# print(lstm.predict('Bernie Sanders is running a fading campaign'))
+model_path = 'static/lstm_models/'
 
 models = {
     'vader': VaderAnalyzer(),
     'textblob': TextBlobAnalyzer(),
-    'lstm': LSTMAnalyzer(model_dir=path)
+    'lstm': LSTMAnalyzer(model_dir=os.path.join(dirname, model_path))
 }
 
 
@@ -74,8 +66,14 @@ def data(model):
     if request.method == 'POST':
         post_data = request.data  # specifying data range, news agency etc.
     if request.method == 'GET':
-        #     get default data
-        pass
+        if model == 'all':
+            query = [c for c in Article.__table__.c if c.name != 'text']
+            results = db.session.query(*query).\
+                order_by(Article.datetime.desc()). \
+                limit(DEFAULT_DATA_POINTS_LIMIT).all()
+
+            return jsonify([r._asdict() for r in results])
+
 
     return ''
 
@@ -127,8 +125,6 @@ def bert():
 
 @app.route('/lstm')
 def lstm():
-    from sentinews.models.lstm import LSTMAnalyzer
-    lstm = LSTMAnalyzer()
     return render_template('lstm.html', title='LSTM')
 
 
