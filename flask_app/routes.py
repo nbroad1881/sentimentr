@@ -56,8 +56,10 @@ def model_page(model):
     return render_template('model.html', model=model)
 
 
-@app.route('/data/<model>', methods=['GET', 'POST'])
-def data(model):
+# todo: occasionally store data so it doesn't have to load everytime
+
+@app.route('/data/', methods=['GET', 'POST'])
+def data():
     """
     Finds the corresponding data requested for the given model.
     :return: JSON
@@ -66,13 +68,12 @@ def data(model):
     if request.method == 'POST':
         post_data = request.data  # specifying data range, news agency etc.
     if request.method == 'GET':
-        if model == 'all':
-            query = [c for c in Article.__table__.c if c.name != 'text']
-            results = db.session.query(*query).\
-                order_by(Article.datetime.desc()). \
-                limit(DEFAULT_DATA_POINTS_LIMIT).all()
+        query = [c for c in Article.__table__.c if c.name != 'text']
+        results = db.session.query(*query).\
+            order_by(Article.datetime.desc()). \
+            limit(DEFAULT_DATA_POINTS_LIMIT).all()
 
-            return jsonify([r._asdict() for r in results])
+        return jsonify([r._asdict() for r in results])
 
 
     return ''
