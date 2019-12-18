@@ -5,6 +5,8 @@ const BERT = 4;
 const ALL_MODELS = 9;
 
 let getData = $.get('/data_test');
+let getLSTMData = $.post('/analyze/lstm', {text: 'Great win for Bernie Sanders'})
+console.log(getLSTMData)
 let chart_data;
 let chart;
 
@@ -15,6 +17,10 @@ $("#text-button").click(function(){
         console.log(data);
     });
 });
+
+getLSTMData.done(function(results){
+    console.log(results)
+})
 
 
 getData.done(function (results) {
@@ -95,6 +101,7 @@ function roundToTwo(num) {
     return +(Math.round(num + "e+3") + "e-3");
 }
 
+//todo: make scales correct, add lstm
 function createDatasets(chartNum) {
     let new_label;
     let new_color;
