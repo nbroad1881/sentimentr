@@ -1,7 +1,7 @@
 # Sentimentr
 
-A flask app to display the sentiments of various news titles as analyzed in (name tbd) package.  Specifically, the 
-headlines mention one presidential candidate in the US 2020 election. Recent headlines from CNN, Fox News, and New
+A flask app to display the sentiments of various news titles as analyzed in the senti-news package.  Specifically, each 
+headline mentions one presidential candidate in the US 2020 election. Recent headlines from CNN, Fox News, and New
  York Times will be analyzed using various sentiment analysis tools such as:
 * VADER (Valence Aware Dictionary and sEntiment Reasoner)
 * TextBlob 
