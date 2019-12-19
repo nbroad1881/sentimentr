@@ -4,21 +4,21 @@ const LSTM = 3;
 const BERT = 4;
 const ALL_MODELS = 9;
 
-let getData = $.get('/data_test');
+let getData = $.get('/data/');
 let getLSTMData = $.post('/analyze/lstm', {text: 'Great win for Bernie Sanders'})
 console.log(getLSTMData)
 let chart_data;
 let chart;
 
-$("#text-button").click(function(){
+$("#text-button").click(function () {
     let model = $('label.active').text().trim();
     let text_field = $('#text-field').val();
-    $.post("/analyze/textblob", {text: text_field}, function(data){
+    $.post("/analyze/textblob", {text: text_field}, function (data) {
         console.log(data);
     });
 });
 
-getLSTMData.done(function(results){
+getLSTMData.done(function (results) {
     console.log(results)
 })
 
@@ -33,6 +33,21 @@ getData.done(function (results) {
         dates.push(new Date(res['datetime']));
         titles.push(res['title']);
         news_companies.push(res['news_co']);
+        lstm_data = {
+            pos: res['lstm_p_pos'],
+            neu: res['lstm_p_neu'],
+            neg: res['lstm_p_neg'],
+        }
+        vader_data = {
+            pos: res['vader_positive'],
+            neu: res['vader_neutral'],
+            neg: res['vader_negative'],
+        }
+        textblob_data = {
+            pos: res['textblob_p_pos'],
+            neu: 0,
+            neg: res['textblob_p_neg'],
+            }
     });
     const data = {
         labels: dates,
@@ -132,22 +147,22 @@ function createDatasets(chartNum) {
             return [createDatasets(TEXTBLOB)[0], createDatasets(VADER)[0], createDatasets(LSTM)[0]];
     }
     let new_data = [];
-        chart_data.forEach((row) => {
-                new_data.push(row[new_key])
-            });
+    chart_data.forEach((row) => {
+        new_data.push(row[new_key])
+    });
 
-        return [{
-                label: new_label,
-                fill: new_fill,
-                borderColor: new_color,
-                backgroundColor: new_color,
-                data: new_data
-        }];
+    return [{
+        label: new_label,
+        fill: new_fill,
+        borderColor: new_color,
+        backgroundColor: new_color,
+        data: new_data
+    }];
 }
 
 function updateChart(chartNum) {
     chart.options.legend.display = false;
-    switch (chartNum){
+    switch (chartNum) {
         case(TEXTBLOB):
             chart.options.title.text = 'TextBlob Scores';
             break;
