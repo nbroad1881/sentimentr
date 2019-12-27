@@ -10,10 +10,121 @@ const LSTM_COLOR = "rgba(43, 178, 192, 1)";
 const BERT_COLOR = "rgba(131, 43, 192, 1)";
 
 let getData = $.get('/data/');
+let getVader = $.get('/vader_data');
+
 let getLSTMData = $.post('/analyze/lstm', {text: 'Great win for Bernie Sanders'})
 console.log(getLSTMData)
 let chart_data;
 let chart;
+let textblob_data = [];
+let vader_data = [];
+let lstm_data = [];
+let bert_data = [];
+
+let v1 = [];
+let v2 = [];
+let v3 = [];
+let v4 = [];
+let v5 = [];
+let v6 = [];
+let v7 = [];
+
+let temp_datasets = [];
+let temp_labels = [];
+
+getVader.done(function (results){
+    var index = 1;
+    console.log(results)
+    temp_datasets.push({
+        data:results[index][0]
+    });
+
+    temp_labels = results[index][1]
+    temp_labels.pop()
+    const data = {
+
+        labels: temp_labels,
+        datasets: temp_datasets
+        // datasets: createDatasets(TEXTBLOB)
+    };
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const options = {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: data,
+        aspectRatio: 2,
+
+        // Configuration options go here
+        options: {
+            tooltips: {
+                callbacks: {
+                    title: function (tooltipItems) {
+                        let index = tooltipItems[0].index;
+                        let news_co = news_companies[index];
+                        let score = tooltipItems[0].value;
+                        let date = dates[index];
+                        let minutes = date.getMinutes();
+                        if (minutes < 10) {
+                            minutes = '0' + String(minutes);
+                        }
+                        let hour_min = date.getHours() + ':' + minutes;
+
+                        return roundToTwo(score) + ' - ' + news_co + ' - ' + date.toDateString() + ' - ' + hour_min;
+                    },
+
+                    label: function (tooltipItem) {
+
+                        return titles[tooltipItem.index];
+                    }
+                },
+                titleFontSize: 20,
+                bodyFontSize: 16,
+
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    display: true,
+                    time: {
+                        unit: 'day',
+                        //     displayFormats: {
+                        //         day: 'MMM Do HA'
+                        // }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }],
+            },
+            title: {
+                display: true,
+                text: 'TextBlob Scores',
+                fontSize: 30
+            },
+            legend: {
+                display: false,
+                labels: {
+                    fontSize: 18
+                }
+            }
+        }
+    };
+    console.log(options)
+    chart = new Chart(ctx, options);
+    // results.forEach((scores) => {
+    //     temp_datasets.push({
+    //         data: scores
+    //     })
+    // })
+});
+
+function range(start, end) {
+    if(start === end) return [start];
+    return [start, ...range(start + 1, end)];
+}
 
 $("#text-button").click(function () {
     let model = $('label.active').text().trim();
