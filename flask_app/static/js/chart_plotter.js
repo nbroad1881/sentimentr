@@ -4,6 +4,11 @@ const LSTM = 3;
 const BERT = 4;
 const ALL_MODELS = 9;
 
+const TEXTBLOB_COLOR = "rgba(192, 57, 43, 1)";
+const VADER_COLOR = "rgba(104, 192, 43, 1)";
+const LSTM_COLOR = "rgba(43, 178, 192, 1)";
+const BERT_COLOR = "rgba(131, 43, 192, 1)";
+
 let getData = $.get('/data/');
 let getLSTMData = $.post('/analyze/lstm', {text: 'Great win for Bernie Sanders'})
 console.log(getLSTMData)
@@ -117,39 +122,32 @@ function roundToTwo(num) {
 }
 
 //todo: make scales correct, add lstm
-function createDatasets(chartNum) {
+function createDatasets(chartIdentifier) {
     let new_label;
     let new_color;
-    let new_key;
     let new_fill = false;
 
-    switch (chartNum) {
+    switch (chartIdentifier) {
         case (TEXTBLOB):
             new_label = 'TextBlob Scores';
-            new_color = "rgba(192, 57, 43, 1)";
-            new_key = 'textblob_polarity';
+            new_color = TEXTBLOB_COLOR;
             break;
         case (VADER):
             new_label = 'Vader Scores';
-            new_color = "rgba(104, 192, 43, 1)";
-            new_key = 'vader_compound';
+            new_color = VADER_COLOR;
             break;
         case (LSTM):
             new_label = 'LSTM Scores';
-            new_color = "rgba(43, 178, 192, 1)";
-            new_key = 'lstm_score';
+            new_color = LSTM_COLOR;
             break;
 
         case (BERT):
-            new_color = "rgba(131, 43, 192, 1)";
+            new_color = BERT_COLOR;
             break;
         case (ALL_MODELS):
             return [createDatasets(TEXTBLOB)[0], createDatasets(VADER)[0], createDatasets(LSTM)[0]];
     }
-    let new_data = [];
-    chart_data.forEach((row) => {
-        new_data.push(row[new_key])
-    });
+    let new_data = classifiers[chartIdentifier];
 
     return [{
         label: new_label,
