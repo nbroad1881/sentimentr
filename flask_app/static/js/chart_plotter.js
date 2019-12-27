@@ -31,32 +31,25 @@ getLSTMData.done(function (results) {
 getData.done(function (results) {
     chart_data = results;
     const ctx = document.getElementById('myChart').getContext('2d');
-    const dates = [];
-    const titles = [];
-    const news_companies = [];
-    results.forEach(function (res) {
-        dates.push(new Date(res['datetime']));
-        titles.push(res['title']);
-        news_companies.push(res['news_co']);
-        lstm_data = {
-            pos: res['lstm_p_pos'],
-            neu: res['lstm_p_neu'],
-            neg: res['lstm_p_neg'],
-        }
-        vader_data = {
-            pos: res['vader_positive'],
-            neu: res['vader_neutral'],
-            neg: res['vader_negative'],
-        }
-        textblob_data = {
-            pos: res['textblob_p_pos'],
-            neu: 0,
-            neg: res['textblob_p_neg'],
-            }
-    });
+    const all_dates = results['dates'];
+    const titles = results['titles'];
+    const vader_scores = results['vader'][0];
+    const textblob_scores = results['textblob'][0];
+    const lstm_scores = results['lstm'][0];
+    const filter_dates = results['lstm'][1];
+
+
+
+
+    classifiers[TEXTBLOB] = textblob_scores;
+    classifiers[VADER] = vader_scores;
+    classifiers[LSTM] = lstm_scores;
+
+
     const data = {
-        labels: dates,
-        datasets: createDatasets(TEXTBLOB)
+
+        labels: filter_dates,
+        datasets:createDatasets(TEXTBLOB)
     };
     const options = {
         // The type of chart we want to create
