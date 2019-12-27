@@ -151,9 +151,9 @@ function createDatasets(chartIdentifier) {
     }];
 }
 
-function updateChart(chartNum) {
+function updateChart(chartIdentifier) {
     chart.options.legend.display = false;
-    switch (chartNum) {
+    switch (chartIdentifier) {
         case(TEXTBLOB):
             chart.options.title.text = 'TextBlob Scores';
             break;
@@ -171,7 +171,7 @@ function updateChart(chartNum) {
             chart.options.title.text = 'TextBlob Scores';
             break;
     }
-    chart.data.datasets = createDatasets(chartNum);
+    chart.data.datasets = createDatasets(chartIdentifier);
     chart.update();
 }
 
