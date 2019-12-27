@@ -136,7 +136,7 @@ $("#text-button").click(function () {
 
 getLSTMData.done(function (results) {
     console.log(results)
-})
+});
 
 
 getData.done(function (results) {
@@ -200,10 +200,18 @@ getData.done(function (results) {
             scales: {
                 xAxes: [{
                     type: 'time',
+                    display: true,
                     time: {
-                        unit: 'day'
+                        unit: 'day',
+                        //     displayFormats: {
+                        //         day: 'MMM Do HA'
+                        // }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
                     }
-                }]
+                }],
             },
             title: {
                 display: true,
