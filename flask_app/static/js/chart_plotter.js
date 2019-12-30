@@ -193,9 +193,20 @@ function updateChart(chartIdentifier) {
     chart.update();
 }
 
-
-function score(positive, negative) {
-    return positive - negative;
+//Returns a two element array.
+//First element is new label
+//Second element is new border dash style
+function get_line_style(chartIdentifier, news_co) {
+    if ([TEXTBLOB, VADER, LSTM, ALL_MODELS].includes(chartIdentifier)) {
+        if ([CNN, NYT, FOX].includes(news_co)) {
+            return {
+                new_label: NEWS_COMPANIES[news_co] + ' ' + CLASSIFIER_LABELS[chartIdentifier],
+                new_border_dash: DASH_STYLES[news_co];
+            }
+        }
+        return [CLASSIFIER_LABELS[chartIdentifier], DASH_STYLES[DEFAULT]]
+    }
+    return null;
 }
 
 
