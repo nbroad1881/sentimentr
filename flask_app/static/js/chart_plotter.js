@@ -191,7 +191,6 @@ function updateChart(chartIdentifier) {
     chart.data.labels = classifier_labels.slice(first_index, second_index);
     chart.data.datasets = createDatasets(chartIdentifier);
     chart.update();
-    console.log(chart);
 }
 
 
@@ -220,6 +219,7 @@ $("#all-models").click(function () {
 $(".period").click(function () {
     let period = this.id;
     let indices = [0, dates.length];
+    //todo: change starting date to be custom
     switch (period) {
         case "1w":
             indices = get_date_indices(new Date(), dates, 7);
@@ -247,15 +247,10 @@ $(".period").click(function () {
 
 });
 
-// todo: handle data nicely for frequent requests
 function set_arrays(results) {
     titles = results['titles'];
     news_companies = results['news_co'];
-    console.log(new Date(results['dates_array'][0]));
-    console.log(new Date(results['dates_array'][0]));
-    console.log(results['dates_array'][0]);
     start_date = new Date();
-    // start_date.setUTCDate(results['dates_array'][0])
     dates = make_date_list(new Date(), DEFAULT_NUM_DAYS);
     dates_averaged = results['dates_array'];
     classifiers[TEXTBLOB] = results['textblob_averaged'];
@@ -264,11 +259,6 @@ function set_arrays(results) {
     classifier_labels = dates;
 }
 
-function set_index_window(first_ind, second_ind) {
-    first_index = first_ind;
-    second_index = second_ind;
-    updateChart(NOCHANGE);
-}
 
 //Starting date should be a Date object
 function make_date_list(starting_date, number_of_days) {
@@ -291,8 +281,6 @@ function get_date_indices(starting_date, date_array, num_days) {
     let second_index = date_array.length;
     let second_date = new Date();
     second_date.setUTCDate(starting_date.getUTCDate() - num_days);
-    console.log(starting_date);
-    console.log(date_array[0], date_array[170]);
     for (let i = 0; i < date_array.length; i++) {
         // check for same year, month, day
         let correct_day = (starting_date.getUTCDate() === date_array[i].getUTCDate());
@@ -310,6 +298,5 @@ function get_date_indices(starting_date, date_array, num_days) {
         }
 
     }
-    console.log(first_index, second_index);
     return [first_index, second_index];
 }
