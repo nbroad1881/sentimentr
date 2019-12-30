@@ -1,3 +1,4 @@
+const NOCHANGE = 0;
 const TEXTBLOB = 1;
 const VADER = 2;
 const LSTM = 3;
@@ -12,15 +13,20 @@ const BERT_COLOR = "rgba(131, 43, 192, 1)";
 let getData = $.get('/data/');
 
 let getLSTMData = $.post('/analyze/lstm', {text: 'Great win for Bernie Sanders'})
-console.log(getLSTMData)
-let chart_data;
+let classifiers = {};
+let titles = [];
+let classifier_labels = [];
+let news_companies = [];
 let chart;
+let dates = [];
+let dates_averaged = [];
+let first_index = 0;
+let second_index = -1;
+
+let current_classifier = TEXTBLOB;
 
 
-function range(start, end) {
-    if(start === end) return [start];
-    return [start, ...range(start + 1, end)];
-}
+
 
 $("#text-button").click(function () {
     let model = $('label.active').text().trim();
@@ -36,37 +42,19 @@ getLSTMData.done(function (results) {
 
 
 getData.done(function (results) {
-    chart_data = results;
     const ctx = document.getElementById('myChart').getContext('2d');
-    const all_dates = results['dates'];
-    const titles = results['titles'];
-    const vader_scores = results['vader'][0];
-    const textblob_scores = results['textblob'][0];
-    const lstm_scores = results['lstm'][0];
-    const filter_dates = results['lstm'][1];
-
-
-
-
-    classifiers[TEXTBLOB] = textblob_scores;
-    classifiers[VADER] = vader_scores;
-    classifiers[LSTM] = lstm_scores;
-
+    set_arrays(results, false);
 
     const data = {
-
-        labels: filter_dates,
-        datasets:createDatasets(TEXTBLOB)
+        labels: classifier_labels,
+        datasets: createDatasets(TEXTBLOB)
     };
     const options = {
-        // The type of chart we want to create
         type: 'line',
 
-        // The data for our dataset
         data: data,
         aspectRatio: 2,
 
-        // Configuration options go here
         options: {
             tooltips: {
                 callbacks: {
@@ -74,12 +62,12 @@ getData.done(function (results) {
                         let index = tooltipItems[0].index;
                         let news_co = news_companies[index];
                         let score = tooltipItems[0].value;
-                        let date = dates[index];
-                        let minutes = date.getMinutes();
+                        let date = classifier_labels[index];
+                        let minutes = date.getUTCMinutes();
                         if (minutes < 10) {
                             minutes = '0' + String(minutes);
                         }
-                        let hour_min = date.getHours() + ':' + minutes;
+                        let hour_min = date.getUTCHours() + ':' + minutes;
 
                         return roundToTwo(score) + ' - ' + news_co + ' - ' + date.toDateString() + ' - ' + hour_min;
                     },
@@ -122,7 +110,6 @@ getData.done(function (results) {
             }
         }
     };
-    console.log(options)
     chart = new Chart(ctx, options);
 
 });
@@ -156,7 +143,13 @@ function createDatasets(chartIdentifier) {
             break;
         case (ALL_MODELS):
             return [createDatasets(TEXTBLOB)[0], createDatasets(VADER)[0], createDatasets(LSTM)[0]];
+        case(NOCHANGE):
+            break;
     }
+    if(chartIdentifier === NOCHANGE){
+        return chart.data.datasets;
+    }
+
     let new_data = classifiers[chartIdentifier];
 
     return [{
@@ -164,7 +157,7 @@ function createDatasets(chartIdentifier) {
         fill: new_fill,
         borderColor: new_color,
         backgroundColor: new_color,
-        data: new_data
+        data: new_data.slice(first_index, second_index)
     }];
 }
 
@@ -184,10 +177,15 @@ function updateChart(chartIdentifier) {
             chart.options.title.text = 'All Models';
             chart.options.legend.display = true;
             break;
+        case(NOCHANGE):
+            if (chart.data.datasets.length > 1){
+                chart.options.legend.display = true;
+            }
+            break;
         default:
-            chart.options.title.text = 'TextBlob Scores';
             break;
     }
+    chart.data.labels = classifier_labels.slice(first_index, second_index);
     chart.data.datasets = createDatasets(chartIdentifier);
     chart.update();
 }
