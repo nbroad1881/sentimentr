@@ -216,7 +216,29 @@ $("#lstm").click(function () {
     updateChart(LSTM, current_news);
 });
 $("#all-models").click(function () {
-    updateChart(ALL_MODELS);
+    updateChart(ALL_MODELS, current_news);
+});
+
+$(".news-btn").click(function () {
+    let news_btn = this.id;
+    switch (news_btn) {
+        case "cnn":
+            updateChart(current_classifier, CNN);
+            console.log("*******************************");
+            console.log(current_classifier, current_news, CNN);
+            break;
+        case "nyt":
+            updateChart(current_classifier, NYT);
+            break;
+        case "fox":
+            updateChart(current_classifier, FOX);
+            break;
+        case "all-news":
+            updateChart(current_classifier, ALL_NEWS_GROUPS);
+            break;
+        default:
+            break;
+    }
 });
 
 
