@@ -146,36 +146,53 @@
 </section>
 
 
-<section class="page-section bg-info pt-4" id='results'>
+<section class="page-section bg-white pt-4" id='results'>
     <div class="container">
         <h2 class="text-center mt-0">Results</h2>
-{#                  Date Start: <input type="date" name="date-start">#}
-{#                  Date End: <input type="date" name="date-end">#}
-                    Sample Sentence: <input type="text" name="sample" id="text-field">
-                  <label class='btn btn-dark text-center' id="text-button">Submit</label><br>
-            </form>
+        {#        todo: have a spot for users to input a sample sentence#}
+        {#                  Date Start: <input type="date" name="date-start">#}
+        {#                  Date End: <input type="date" name="date-end">#}
+        {#                    Sample Sentence: <input type="text" name="sample" id="text-field">#}
+        {#                  <label class='btn btn-dark text-center' id="text-button">Submit</label><br>#}
         <hr class="divider my-4">
-            <div class="text-center btn-group-lg btn-group-toggle" data-toggle="buttons" >
+        <div class="text-center btn-group-lg btn-group-toggle" data-toggle="buttons">
 
-                 <label class="text-center  d-inline btn btn-light btn-outline-primary mx-4 active" id="textblob">
-                    <input class="text-center" type="radio" name="options" id="textblob-btn" checked> TextBlob</label>
+            <label class="text-center  d-inline btn btn-light btn-outline-primary mx-4 active" id="textblob">
+                <input class="text-center" type="radio" name="options" id="textblob-btn" checked> TextBlob</label>
 
-                 <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="vader">
-                    <input class="text-center" type="radio" name="options" id="vader-btn"> Vader</label>
+            <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="vader">
+                <input class="text-center" type="radio" name="options" id="vader-btn"> Vader</label>
 
-                 <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="lstm">
-                    <input class="text-center" type="radio" name="options" id="lstm-btn"> LSTM</label>
+            <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="lstm">
+                <input class="text-center" type="radio" name="options" id="lstm-btn"> LSTM</label>
 
-                 <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="all-models">
-                    <input class="text-center" type="radio" name="options" id="option4"> All Models</label>
+            <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="all-models">
+                <input class="text-center" type="radio" name="options" id="option4"> All Models</label>
 
         </div>
-        <div class="d-flex justify-content-center mt-3">
-            <div style="position: relative; height:70vh; width:100vw">
-                <canvas class="p-3" id="myChart" style="background-color: white"></canvas>
+{#todo: make radio buttons for other selectors#}
+        <div id="update-nav" class="mt-4">
+            <div id="range-selector" class="text-center">
+                <input type="button" id="1w" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="1 week"/>
+                <input type="button" id="2w" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="2 weeks"/>
+                <input type="button" id="1m" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="1 month"/>
+                <input type="button" id="3m" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="3 months"/>
+                <input type="button" id="6m" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="6 months"/>
+            </div>
+            <div id="news-co-selector" class="text-center mt-3">
+                <input type="button" id="cnn" class="mx-1 btn btn-success d-inline news-btn ui-button" value="CNN"/>
+                <input type="button" id="fox" class="mx-1 btn btn-success d-inline news-btn ui-button" value="Fox News"/>
+                <input type="button" id="nyt" class="mx-1 btn btn-success d-inline news-btn ui-button" value="New York Times"/>
+                <input type="button" id="all-news" class="mx-1 btn btn-success d-inline news-btn ui-button" value="All Three"/>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <div style="position: relative; height:70vh; width:100vw">
+                    <canvas class="p-3" id="myChart" style="background-color: white"></canvas>
+                </div>
             </div>
         </div>
-    </div>
+
+
 
 </section>
 
@@ -217,10 +234,10 @@
 
 <!-- Bootstrap core JavaScript -->
 <script type="text/javascript" src="{{ url_for("static", filename="vendor/jquery/jquery.min.js") }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-{#<script type="text/javascript" src="{{ url_for("static", filename="vendor/popper/popper.min.js") }}"></script>#}
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"#}
+{#        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"#}
+{#        crossorigin="anonymous"></script>#}
+<script type="text/javascript" src="{{ url_for("static", filename="vendor/popper/popper.min.js") }}"></script>
 <script type="text/javascript"
         src="{{ url_for("static", filename="vendor/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
 
