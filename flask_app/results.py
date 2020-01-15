@@ -109,6 +109,8 @@ def filter_by(df, column_name, value):
     lower_column = df[column_name].apply(lambda s: s.lower())
     return df.loc[lower_column.str.contains(value.lower())]
 
+def reverse_all(df):
+    return df.iloc[::-1];
 
 def df_to_dict(df):
     d = {}
