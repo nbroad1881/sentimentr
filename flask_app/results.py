@@ -64,7 +64,7 @@ def make_datetimes_descending(df):
     return df.sort_values(by=DB_DATETIME_COLUMN_NAME, ascending=False)
 
 
-def get_most_recent(df, num_entries=100):
+def get_most_recent(df, num_entries=50):
     return make_datetimes_descending(df).iloc[:num_entries, :]
 
 
