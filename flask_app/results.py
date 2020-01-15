@@ -40,6 +40,8 @@ SCORE_COLUMNS = {
     'lstm': 'lstm_score',
 }
 
+CHART_DATA_COLUMNS = ['url', 'datetime', 'title', 'news_co', 'vader_score', 'textblob_score', 'lstm_score']
+
 
 class Result:
 
@@ -64,6 +66,10 @@ def make_datetimes_descending(df):
 
 def get_most_recent(df, num_entries=100):
     return make_datetimes_descending(df).iloc[:num_entries, :]
+
+
+def get_data_for_chart(df):
+    return df.loc[:, CHART_DATA_COLUMNS]
 
 
 def average_by_day(df, days_back=180):
