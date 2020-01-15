@@ -155,35 +155,49 @@
         {#                    Sample Sentence: <input type="text" name="sample" id="text-field">#}
         {#                  <label class='btn btn-dark text-center' id="text-button">Submit</label><br>#}
         <hr class="divider my-4">
-        <div class="text-center btn-group-lg btn-group-toggle" data-toggle="buttons">
+{#        <div class="text-center btn-group-lg btn-group-toggle" data-toggle="buttons">#}
+{##}
+{#            <label class="text-center  d-inline btn btn-light btn-outline-primary mx-4 active" id="textblob">#}
+{#                <input class="text-center" type="radio" name="options" id="textblob-btn" checked> TextBlob</label>#}
+{##}
+{#            <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="vader">#}
+{#                <input class="text-center" type="radio" name="options" id="vader-btn"> Vader</label>#}
+{##}
+{#            <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="lstm">#}
+{#                <input class="text-center" type="radio" name="options" id="lstm-btn"> LSTM</label>#}
 
-            <label class="text-center  d-inline btn btn-light btn-outline-primary mx-4 active" id="textblob">
-                <input class="text-center" type="radio" name="options" id="textblob-btn" checked> TextBlob</label>
-
-            <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="vader">
-                <input class="text-center" type="radio" name="options" id="vader-btn"> Vader</label>
-
-            <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="lstm">
-                <input class="text-center" type="radio" name="options" id="lstm-btn"> LSTM</label>
-
-            <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="all-models">
-                <input class="text-center" type="radio" name="options" id="option4"> All Models</label>
+{#            <label class="text-center d-inline btn btn-light btn-outline-primary mx-4" id="all-models">#}
+{#                <input class="text-center" type="radio" name="options" id="option4"> All Models</label>#}
 
         </div>
 {#todo: make radio buttons for other selectors#}
-        <div id="update-nav" class="mt-4">
-            <div id="range-selector" class="text-center">
-                <input type="button" id="1w" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="1 week"/>
-                <input type="button" id="2w" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="2 weeks"/>
-                <input type="button" id="1m" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="1 month"/>
-                <input type="button" id="3m" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="3 months"/>
-                <input type="button" id="6m" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="6 months"/>
+        <div id="update-nav" class="my-2">
+            <div id="model-selector" class="text-center">
+                <input type="button" id="TextBlob" class="mx-1 my-2 btn btn-primary d-inline filter-btn ui-button model-btn   selected-feature" value="TextBlob"/>
+                <input type="button" id="VADER" class="mx-1 my-2 btn btn-outline-primary d-inline filter-btn ui-button model-btn" value="VADER"/>
+                <input type="button" id="LSTM" class="mx-1 my-2 btn btn-outline-primary d-inline filter-btn ui-button model-btn" value="LSTM"/>
+{#                <input type="button" id="all-models" class="mx-1 my-2 btn btn-outline-primary btn-outline-primary d-inline filter-btn ui-button model-btn" value="All Models"/>#}
             </div>
-            <div id="news-co-selector" class="text-center mt-3">
-                <input type="button" id="cnn" class="mx-1 btn btn-success d-inline news-btn ui-button" value="CNN"/>
-                <input type="button" id="fox" class="mx-1 btn btn-success d-inline news-btn ui-button" value="Fox News"/>
-                <input type="button" id="nyt" class="mx-1 btn btn-success d-inline news-btn ui-button" value="New York Times"/>
-                <input type="button" id="all-news" class="mx-1 btn btn-success d-inline news-btn ui-button" value="All Three"/>
+            <div id="candidate-selector" class="text-center">
+                <input type="button" id="trump" class="mx-1 my-2 btn btn-dark btn-outline-darkd-inline filter-btn ui-button  selected-feature candidate-btn" value="Donald Trump"/>
+                <input type="button" id="biden" class="mx-1 my-2 btn btn-outline-dark d-inline filter-btn ui-button candidate-btn" value="Joe Biden"/>
+                <input type="button" id="warren" class="mx-1 my-2 btn btn-outline-dark d-inline filter-btn ui-button candidate-btn" value="Elizabeth Warren"/>
+                <input type="button" id="sanders" class="mx-1 my-2 btn btn-outline-dark d-inline filter-btn ui-button candidate-btn" value="Bernie Sanders"/>
+                <input type="button" id="harris" class="mx-1 my-2 btn btn-outline-dark d-inline filter-btn ui-button candidate-btn" value="Kamala Harris"/>
+                <input type="button" id="buttigieg" class="mx-1 my-2 btn btn-outline-dark d-inline filter-btn ui-button candidate-btn" value="Pete Buttigieg"/>
+            </div>
+{#            <div id="range-selector" class="text-center">#}
+{#                <input type="button" id="1w" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="1 week"/>#}
+{#                <input type="button" id="2w" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="2 weeks"/>#}
+{#                <input type="button" id="1m" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="1 month"/>#}
+{#                <input type="button" id="3m" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="3 months"/>#}
+{#                <input type="button" id="6m" class="mx-1 btn btn-dark d-inline filter-btn ui-button" value="6 months"/>#}
+{#            </div>#}
+            <div id="news-co-selector" class="text-center my-2">
+                <input type="button" id="CNN" class="mx-1 my-2 btn btn-success d-inline ui-button news-btn filter-btn  selected-feature" value="CNN"/>
+                <input type="button" id="Fox-News" class="mx-1 my-2 btn btn-outline-success d-inline ui-button news-btn filter-btn" value="Fox News"/>
+                <input type="button" id="The-New-York-Times" class="mx-1 my-2 btn btn-outline-success d-inline news-btn filter-btn ui-button" value="New York Times"/>
+{#                <input type="button" id="all-news" class="mx-1 my-2 btn btn-outline-success d-inline  ui-button news-btn filter-btn" value="All Three"/>#}
             </div>
             <div class="d-flex justify-content-center mt-3">
                 <div style="position: relative; height:70vh; width:100vw">
