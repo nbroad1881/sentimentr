@@ -55,6 +55,8 @@ def urls():
     :return:
     :rtype:
     """
+    if check_password(request.args.to_dict()) is False:
+        return "Unauthorized", 401
     articles = DBArticle.query.with_entities(DBArticle.url, DBArticle.title).all()
     return articlesSchema.jsonify(articles, many=True), 200
 
@@ -76,6 +78,9 @@ def article_route():
     if args is None:
         logging.debug(f"No parameters given: {args}")
         return "No parameters given", 400
+
+    if check_password(args) is False:
+        return "Unauthorized", 401
 
     # Pull one article from the database by finding matching url
     if request.method == 'GET':
@@ -143,6 +148,10 @@ def analyze(model):
     if request.method == "POST":
         if model == 'all':
             args = request.args.to_dict()
+
+            if check_password(args) is False:
+                return "Unauthorized", 401
+
             title = args['title']
             va_scores = va.evaluate(title)
             tb_scores = tb.evaluate(title)
@@ -251,3 +260,8 @@ def query_database(candidate, news, opinion):
     return query.order_by(DBArticle.datetime.desc()) \
         .with_entities(*COLUMNS_TO_QUERY) \
         .limit(DEFAULT_NUM_TO_QUERY).all()
+
+
+def check_password(args_dict):
+    if 'pw' in args_dict:
+        return args_dict['pw'] == os.environ['DB_PASSWORD']
