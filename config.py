@@ -22,10 +22,10 @@ DB_URI = f"postgres://{DB_USERNAME}:{DB_PASSWORD}@{DB_ENDPOINT}:{DB_PORT}/{DB_NA
 class Config(object):
     in_dev = os.environ.get('IN_DEV', None)
 
-    RABBITMQ_HOST = '0.0.0.0'
-    RABBITMQ_PORT = '5672'
-    CELERY_BROKER_URL = os.environ.get('RABBITMQ_URL', f"amqp://guest@{RABBITMQ_HOST}:{RABBITMQ_PORT}//")
+    CELERY_BROKER_URL = os.environ.get('RABBITMQ_URL', '')
     CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+
+    CELERY_IMPORTS = ("get_recent_articles")
 
     SQLALCHEMY_DATABASE_URI = DB_URI
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
