@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="text-center">LSTM</h1>
+
+    <div class="container d-flex justify-content-center">
+        <div style="position: relative; height:60vh; width:60vw">
+            <canvas id="myChart" style="background-color: white"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const COMPOUND_INDEX = 8;
+        const DATE_INDEX = 1;
+        const TITLE_INDEX = 2;
+        var getData = $.get('/data_test');
+        {#var getData = $.get('/vader_data');#}
+
+
+        getData.done(function (results) {
+            console.log(results[3])
+            const ctx = document.getElementById('myChart').getContext('2d');
+            var scores = [];
+            var dates = [];
+            var titles = [];
+            var news_companies = [];
+            results.forEach(function (res) {
+                scores.push(res['lstm_score']);
+                dates.push(new Date(res['datetime']));
+                titles.push(res['title']);
+                news_companies.push(res['news_co']);
+            });
+            console.log(dates[0])
+            const data = {
+                labels: dates,
+                datasets: [{
+                    label: 'Title Sentiment',
+                    fill: false,
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: scores
+                }]
+            };
+            const options = {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: data,
+                aspectRatio: 2,
+
+                // Configuration options go here
+                options: {
+                    tooltips: {
+                        callbacks: {
+                            title: function(tooltipItems, data){
+                                var index = tooltipItems[0].index;
+                                var news_co = news_companies[index];
+                                var score = tooltipItems[0].value;
+                                var date = dates[index];
+                                var hour_min = date.getHours() + ':' + date.getMinutes();
+
+                                return roundToTwo(score) + ' - ' + news_co + ' - ' + date.toDateString() +' '+ hour_min;
+                            },
+
+                            label: function (tooltipItem, data) {
+                                var title = titles[tooltipItem.index];
+                                return title;
+                            }
+                        },
+                        titleFontSize:20,
+                        bodyFontSize:16
+                    },
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            }
+                        }]
+                    }
+                }
+            };
+            var myChart = new Chart(ctx, options);
+        })
+
+        function roundToTwo(num) {
+            return +(Math.round(num + "e+3") + "e-3");
+        }
+    </script>
+{% endblock content %}
