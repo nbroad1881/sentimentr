@@ -8,7 +8,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
-from sentinews.title_finder import NEWSAPI
+from sentinews.api_tool import NEWSAPI
 
 load_dotenv()
 logging.basicConfig(level=logging.DEBUG)
@@ -65,7 +65,7 @@ def get_recent_articles():
     """
     start_date = datetime.now(tz=timezone.utc) - timedelta(hours=HOURS_AGO)
     logging.info(start_date)
-    num_steps = 4
+    num_steps = 5
     end_date = datetime.now(tz=timezone.utc)
 
     news_api = NEWSAPI(start_date=start_date, end_date=end_date, num_steps=num_steps)

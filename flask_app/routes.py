@@ -55,7 +55,7 @@ def urls():
     :return:
     :rtype:
     """
-    if check_password(request.args.to_dict()) is False:
+    if check_password(request.headers) is False:
         return "Unauthorized", 401
     articles = DBArticle.query.with_entities(DBArticle.url, DBArticle.title).all()
     return articlesSchema.jsonify(articles, many=True), 200
@@ -79,7 +79,7 @@ def article_route():
         logging.debug(f"No parameters given: {args}")
         return "No parameters given", 400
 
-    if check_password(args) is False:
+    if check_password(request.headers) is False:
         return "Unauthorized", 401
 
     # Pull one article from the database by finding matching url
@@ -149,14 +149,16 @@ def analyze(model):
         if model == 'all':
             args = request.args.to_dict()
 
-            if check_password(args) is False:
+            if check_password(request.headers) is False:
                 return "Unauthorized", 401
 
             title = args['title']
             va_scores = va.evaluate(title)
             tb_scores = tb.evaluate(title)
             lstm_scores = lstm.evaluate(title)
+
             # todo: consider using dict unpacking **dict
+            # create article object
             article = DBArticle(
                 url=args['url'],
                 datetime=isoparse(args['datetime']),
@@ -172,6 +174,8 @@ def analyze(model):
                 lstm_p_neu=lstm_scores['p_neu'],
                 lstm_p_pos=lstm_scores['p_pos'],
                 lstm_p_neg=lstm_scores['p_neg'])
+
+            # Log to db, will fail if there is already an article with the same url.
             try:
                 db.session.add(article)
             except IntegrityError as e:
@@ -201,9 +205,9 @@ def update_article_fields(article, **kwargs):
 def candidate(name):
     # todo: might need another http code
     all_results = {}
-    args = request.args.to_dict();
+    args = request.args.to_dict()
     for news, key in [('CNN', 'cnn'), ('Times', 'the new york times'), ('Fox', 'fox news')]:
-        query_results = query_database(candidate=args.get('candidate'),
+        query_results = query_database(candidate=name,
                                        news=news,
                                        opinion=args.get('opinion'))
         all_results[key] = articlesSchema.dump(query_results, many=True)
@@ -257,11 +261,17 @@ def query_database(candidate, news, opinion):
         query = query.filter(DBArticle.title.ilike(f"%{candidate}%"))
     if opinion:
         query = query.filter(DBArticle.url.contains('opinion'))
-    return query.order_by(DBArticle.datetime.desc()) \
+    results = query.order_by(DBArticle.datetime.desc()) \
         .with_entities(*COLUMNS_TO_QUERY) \
         .limit(DEFAULT_NUM_TO_QUERY).all()
+    if results:
+        results = results[::-1]
+    return results
 
 
-def check_password(args_dict):
-    if 'pw' in args_dict:
-        return args_dict['pw'] == os.environ['DB_PASSWORD']
+def check_password(headers):
+    pw = headers.get('password')
+    if pw != -1:
+        logging.info(pw + '\n' + os.environ['AUTH_PASSWORD'])
+        logging.info(pw == os.environ['AUTH_PASSWORD'])
+        return pw == os.environ['AUTH_PASSWORD']

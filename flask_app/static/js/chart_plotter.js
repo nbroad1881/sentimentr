@@ -37,6 +37,11 @@ const FOX_KEY = 'fox news';
 const NYT_KEY = 'the new york times';
 
 const NEWS_KEYS = [CNN_KEY, FOX_KEY, NYT_KEY];
+const NEWS_KEYS_TO_NAMES = {};
+NEWS_KEYS_TO_NAMES[CNN_KEY]=  CNN;
+NEWS_KEYS_TO_NAMES[NYT_KEY]= NYT;
+NEWS_KEYS_TO_NAMES[FOX_KEY]= FOX;
+
 
 const DATETIME_KEY = 'datetime';
 const LSTM_SCORE_KEY = 'lstm_score';
@@ -81,20 +86,29 @@ let chartOptions = {
     options: {
         tooltips: {
             callbacks: {
-                title: function (t, d) {
-                    return '';
-                },
-                todo: figure out how to put title of article for tooltip
-                title: function(tooltipItem, data){
-                    return data.datasets[tooltipItem.datasetIndex].titles[tooltipItem['index']] || '';
+                // todo: figure out how to put title of article for tooltip
+                title: function (tooltipItem, data) {
+                    let current_dataset = data.datasets[tooltipItem[0].datasetIndex];
+                    console.log(current_dataset);
+                    console.log(current_dataset.titles);
+                    return data.datasets[tooltipItem[0].datasetIndex].titles[tooltipItem[0].index] || '';
                 },
                 label: function (tooltipItem, data) {
-                    return data.datasets[tooltipItem.datasetIndex].news_co || '';
+                    date = new Date(data.labels[tooltipItem['index']]);
+                    news_group = data.datasets[tooltipItem.datasetIndex].news_co;
+                    return NEWS_KEYS_TO_NAMES[news_group] + " - " + date.toDateString() || '';
                 },
-                afterLabel: function (tooltipItem, data) {
-                    return data.labels[tooltipItem['index']]
-                }
-            }
+                labelColor: function (tooltipItem, chart) {
+                    return {
+                        borderColor: LINE_COLORS[ALL_NEWS_GROUPS],
+                        backgroundColor: LINE_COLORS[ALL_NEWS_GROUPS],
+                    };
+                },
+            },
+            titleFontSize: 18,
+            bodyFontSize: 16,
+            footerFontSize: 16,
+
         },
         title: {
             display: false,
@@ -108,11 +122,17 @@ let chartOptions = {
         scales: {
             xAxes: [{
                 // type: 'time',
-                // display: true,
+                display: true,
                 // todo: figure out whether to have constant time increments, or constant space between points
                 scaleLabel: {
                     display: true,
-                    labelString: 'Date'
+                    labelString: 'Date',
+                },
+                ticks: {
+                    source: 'data',
+                    callback: function (value, index, values) {
+                        return value.slice(0, 10);
+                    }
                 }
             }],
             yAxes: [{
@@ -167,24 +187,7 @@ $("#text-button").click(function () {
     });
 });
 
-// getLSTMData.done(function (results) {
-//     console.log(results)
-// });
-
-// candidateData.done(function (results) {
-//     console.log(results);
-//     CANDIDATES.forEach(function (c) {
-//         plotting_data[c] = {};
-//         NEWS_KEYS.forEach(function (n) {
-//             plotting_data[c][n] = results[c][n];
-//         });
-//     });
-//     console.log(plotting_data);
-//     setDatasets();
-//     showDataset(TRUMP, CNN_KEY, TEXTBLOB_SCORE_KEY, false);
-//     chart.update()
-// });
-function add_dataset_from_request(results, candidate){
+function add_dataset_from_request(results, candidate) {
     plotting_data[candidate] = {};
     let list_results = turn_to_array(results);
     NEWS_KEYS.forEach(function (n) {
@@ -236,12 +239,12 @@ function roundToTwo(num) {
 }
 
 function setLabels(candidate, news_co_key) {
-    console.log("setLabels"+candidate+" "+news_co_key);
+    console.log("setLabels" + candidate + " " + news_co_key);
     chart.data.labels = plotting_data[candidate][news_co_key][DATETIME_KEY];
 }
 
 function showDataset(candidate, news_co, model, toggle) {
-    console.log('showDataset:' + candidate +" "+news_co+" "+model)
+    console.log('showDataset:' + candidate + " " + news_co + " " + model)
     news_co = news_co.replace('-', ' ');
     model = model.replace('-', ' ');
     setLabels(candidate, news_co);
@@ -268,11 +271,12 @@ function add_datasets(candidate) {
                 borderColor: "rgba(192, 57, 43, 1)",
                 hidden: true,
                 fill: false,
-                titles: n + " : " + plotting_data[candidate][n]['title'],
+                titles: plotting_data[candidate][n]['title'],
                 news_co: n,
+                pointRadius: 4,
+                pointHitRadius: 6,
+                pointBackgroundColor: LINE_COLORS[ALL_NEWS_GROUPS],
             });
-            console.log(chart.data.datasets);
-
         });
 
     });
