@@ -92,7 +92,6 @@ def article_route():
     # Pull one article from the database by finding matching url
     if request.method == 'GET':
 
-
         # make sure url parameter passed
         if 'url' in args:
             # returns None if not in database
@@ -249,7 +248,7 @@ def page_not_found(e):
     return "Page not found! Error 404", 404
 
 
-def query_database(candidate, news, opinion):
+def query_database(candidate, news, opinion, all=False):
     """
     Query the database with a specified candidate, news company, and whether opinion articles are wanted.
     :param candidate:
@@ -269,6 +268,8 @@ def query_database(candidate, news, opinion):
         query = query.filter(DBArticle.title.ilike(f"%{candidate}%"))
     if opinion:
         query = query.filter(DBArticle.url.contains('opinion'))
+    if all:
+        results = query.all()
     results = query.order_by(DBArticle.datetime.desc()) \
         .with_entities(*COLUMNS_TO_QUERY) \
         .limit(DEFAULT_NUM_TO_QUERY).all()
