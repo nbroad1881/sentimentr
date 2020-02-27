@@ -284,3 +284,53 @@ def check_password(headers):
         logging.info(pw + '\n' + os.environ['AUTH_PASSWORD'])
         logging.info(pw == os.environ['AUTH_PASSWORD'])
         return pw == os.environ['AUTH_PASSWORD']
+
+
+@app.route('/update', methods=['PATCH'])
+def update_all_rows():
+    if request.method != 'PATCH':
+        return 'Invalid method type', 405
+    args = request.args.to_dict()
+    for res in load_in_chunks():
+        for article in res:
+            title = article.title
+            if 'vader' in args:
+                va_scores = va.evaluate(title)
+                article.vader_p_pos = va_scores['p_pos']
+                article.vader_p_neg = va_scores['p_neg']
+                article.vader_p_neu = va_scores['p_neu']
+                article.vader_compound = va_scores['compound']
+            if 'textblob' in args:
+                tb_scores = tb.evaluate(title)
+                article.p_pos = tb_scores['p_pos']
+                article.p_neg = tb_scores['p_neg']
+            if 'lstm' in args:
+                lstm_scores = lstm.evaluate(title)
+                article.lstm_p_pos = lstm_scores['p_pos']
+                article.lstm_p_neg = lstm_scores['p_neg']
+                article.lstm_p_neu = lstm_scores['p_neu']
+            if 'bert' in args:
+                bert_scores = bert.evaluate(title)
+                article.bert_p_pos = bert_scores['p_pos']
+                article.bert_p_neg = bert_scores['p_neg']
+                article.bert_p_neu = bert_scores['p_neu']
+
+    db.session.commit()
+
+    return "Success", 200
+
+
+def load_in_chunks():
+    offset = 0
+    chunk_size = 500
+
+    while True:
+
+        results = db.session.query(DBArticle). \
+            filter(DBArticle.bert_p_pos == None). \
+            limit(chunk_size).offset(offset).all()
+        if results:
+            yield results
+        else:
+            break
+        offset += chunk_size
