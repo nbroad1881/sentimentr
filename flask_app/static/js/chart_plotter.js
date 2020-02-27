@@ -47,6 +47,7 @@ const DATETIME_KEY = 'datetime';
 const LSTM_SCORE_KEY = 'lstm_score';
 const TEXTBLOB_SCORE_KEY = 'textblob_score';
 const VADER_SCORE_KEY = 'vader_score';
+const BERT_SCORE_KEY = 'bert_score';
 const NEWS_CO_KEY = 'news_co';
 const URL_KEY = 'url';
 const TITLE_KEY = 'title';
@@ -63,13 +64,14 @@ const LABEL_TO_KEY = {};
 LABEL_TO_KEY['TextBlob'] = TEXTBLOB_SCORE_KEY;
 LABEL_TO_KEY['VADER'] = VADER_SCORE_KEY;
 LABEL_TO_KEY['LSTM'] = LSTM_SCORE_KEY;
+LABEL_TO_KEY['BERT'] = BERT_SCORE_KEY;
 LABEL_TO_KEY['CNN'] = CNN_KEY;
 LABEL_TO_KEY['Fox-News'] = FOX_KEY;
 LABEL_TO_KEY['The-New-York-Times'] = NYT_KEY;
 
 
 const NEWS_COMPANY_KEYS = [CNN_KEY, FOX_KEY, NYT_KEY];
-const MODEL_KEYS = [LSTM_SCORE_KEY, TEXTBLOB_SCORE_KEY, VADER_SCORE_KEY];
+const MODEL_KEYS = [LSTM_SCORE_KEY, TEXTBLOB_SCORE_KEY, VADER_SCORE_KEY, BERT_SCORE_KEY];
 
 
 let plotting_data = {};
@@ -89,8 +91,6 @@ let chartOptions = {
                 // todo: figure out how to put title of article for tooltip
                 title: function (tooltipItem, data) {
                     let current_dataset = data.datasets[tooltipItem[0].datasetIndex];
-                    console.log(current_dataset);
-                    console.log(current_dataset.titles);
                     return data.datasets[tooltipItem[0].datasetIndex].titles[tooltipItem[0].index] || '';
                 },
                 label: function (tooltipItem, data) {
@@ -151,9 +151,6 @@ let chartOptions = {
 };
 let chart = new Chart(ctx, chartOptions);
 
-
-// let getData = $.get('/data/');
-// let allData = $.get('/data/');
 let bidenData = $.get('/candidate/biden');
 let trumpData = $.get('/candidate/trump');
 let sandersData = $.get('/candidate/sanders');
@@ -163,29 +160,14 @@ let harrisData = $.get('/candidate/harris');
 let cnnData = $.get('/news/cnn');
 let mytData = $.get('/news/nyt');
 let foxData = $.get('/news/fox)');
-// let getLSTMData = $.post('/analyze/lstm', {text: 'Great win for Bernie Sanders'});
 let classifiers = {};
 classifiers[TEXTBLOB] = {};
 classifiers[VADER] = {};
 classifiers[LSTM] = {};
+classifiers[BERT] = {};
 let titles = [];
-let classifier_labels = [];
-let news_companies = [];
 let dates = [];
-let first_index = 0;
-let second_index = -1;
-let current_classifier = TEXTBLOB;
-let current_news = ALL_NEWS_GROUPS;
-let currentFocus = 'candidates';
 
-
-$("#text-button").click(function () {
-    let model = $('label.active').text().trim();
-    let text_field = $('#text-field').val();
-    $.post("/analyze/textblob", {text: text_field}, function (data) {
-        console.log(data);
-    });
-});
 
 function add_dataset_from_request(results, candidate) {
     plotting_data[candidate] = {};
@@ -199,7 +181,6 @@ function add_dataset_from_request(results, candidate) {
         plotting_data[candidate][n][TITLE_KEY] = list_results[n][TITLE_KEY];
         plotting_data[candidate][n][URL_KEY] = list_results[n][URL_KEY];
     });
-    // console.log(plotting_data)
     add_datasets(candidate);
 }
 
@@ -239,16 +220,15 @@ function roundToTwo(num) {
 }
 
 function setLabels(candidate, news_co_key) {
-    console.log("setLabels" + candidate + " " + news_co_key);
     chart.data.labels = plotting_data[candidate][news_co_key][DATETIME_KEY];
 }
 
 function showDataset(candidate, news_co, model, toggle) {
-    console.log('showDataset:' + candidate + " " + news_co + " " + model)
     news_co = news_co.replace('-', ' ');
     model = model.replace('-', ' ');
     setLabels(candidate, news_co);
 
+    console.log(model, chart.data);
     chart.data.datasets.forEach(ds => {
         if (ds.label === candidate + '-' + news_co + '-' + model) {
             if (toggle) {
@@ -304,10 +284,12 @@ function toggleView(btn_id) {
     }
 
     showDataset(candidate, news_co, model, false);
+    console.log(chart);
     chart.update();
+    console.log(chart);
 }
 
-let primary_button_ids = ['TextBlob', 'LSTM', 'VADER', 'all-models'];
+let primary_button_ids = ['TextBlob', 'LSTM', 'VADER', 'BERT', 'all-models'];
 let dark_button_ids = ['trump', 'biden', 'warren', 'harris', 'sanders', 'buttigieg'];
 let success_button_ids = ['CNN', 'The-New-York-Times', 'Fox-News'];
 
@@ -401,6 +383,8 @@ function turn_to_array(response) {
         let textblob_scores = [];
         let vader_scores = [];
         let lstm_scores = [];
+        let bert_scores = [];
+
         let dates = [];
         let titles = [];
         let urls = [];
@@ -410,6 +394,8 @@ function turn_to_array(response) {
             textblob_scores.push(article_scores['textblob_p_pos'] - article_scores['textblob_p_neg']);
             vader_scores.push(article_scores['vader_p_pos'] - article_scores['vader_p_neg']);
             lstm_scores.push(article_scores['lstm_p_pos'] - article_scores['lstm_p_neg']);
+            bert_scores.push(article_scores['bert_p_pos'] - article_scores['bert_p_neg']);
+
             dates.push(article_scores['datetime']);
             titles.push(article_scores['title']);
             urls.push(article_scores['url']);
@@ -419,6 +405,7 @@ function turn_to_array(response) {
             'textblob_score': textblob_scores,
             'vader_score': vader_scores,
             'lstm_score': lstm_scores,
+            'bert_score': bert_scores,
             'datetime': dates,
             'title': titles,
             'url': urls,
