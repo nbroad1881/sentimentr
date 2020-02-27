@@ -8,15 +8,22 @@ class DBArticle(db.Model):
     title = db.Column(db.Text)
     news_co = db.Column(db.String(50))
     text = db.Column(db.Text)
+
     vader_p_pos = db.Column(db.Float)
     vader_p_neg = db.Column(db.Float)
     vader_p_neu = db.Column(db.Float)
     vader_compound = db.Column(db.Float)
+
     textblob_p_pos = db.Column(db.Float)
     textblob_p_neg = db.Column(db.Float)
+
     lstm_p_neu = db.Column(db.Float)
     lstm_p_pos = db.Column(db.Float)
     lstm_p_neg = db.Column(db.Float)
+
+    bert_p_neu = db.Column(db.Float)
+    bert_p_pos = db.Column(db.Float)
+    bert_p_neg = db.Column(db.Float)
 
 descriptions = DBArticle().query.column_descriptions[0]['entity'].__dict__.keys()
 
