@@ -9,7 +9,10 @@ from sqlalchemy.exc import IntegrityError
 from flask_app import app, db
 from flask_app.db_models import DBArticle, COLUMN_NAMES
 from flask_app.schemas import ArticleSchema
-from sentinews.models import VaderAnalyzer, LSTMAnalyzer, TextBlobAnalyzer
+from sentinews.models import (VaderAnalyzer,
+                              LSTMAnalyzer,
+                              TextBlobAnalyzer,
+                              BERTAnalyzer)
 
 articleSchema = ArticleSchema()
 articlesSchema = ArticleSchema(many=True)
@@ -24,6 +27,7 @@ DB_SELECT_COLUMNS = os.environ['DB_SELECT_COLUMNS']
 va = VaderAnalyzer()
 tb = TextBlobAnalyzer()
 lstm = LSTMAnalyzer()
+bert = BERTAnalyzer()
 
 COLUMNS_TO_QUERY = [
     DBArticle.url,
@@ -35,7 +39,10 @@ COLUMNS_TO_QUERY = [
     DBArticle.textblob_p_pos,
     DBArticle.textblob_p_neg,
     DBArticle.lstm_p_pos,
-    DBArticle.lstm_p_neg, ]
+    DBArticle.lstm_p_neg,
+    DBArticle.bert_p_pos,
+    DBArticle.bert_p_neg,
+]
 
 DEFAULT_NUM_TO_QUERY = 100
 
@@ -97,6 +104,7 @@ def article_route():
         query_results = query_database(candidate=args.get('candidate'),
                                        news=args.get('news'),
                                        opinion=args.get('opinion'))
+        # If the query finds anything
         if query_results:
             return articlesSchema.jsonify(query_results, many=True), 200
         return 'Invalid parameters', 400
