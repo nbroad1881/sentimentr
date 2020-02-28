@@ -26,9 +26,9 @@
     --gray-dark: #343a40;
     --primary: #56ab2f;
     --primary-bg: #56ab2f;
-            /*#1F9530;*/
+    /*#1F9530;*/
     --primary-hover: #12AB28;
-    --navbar-brand:rgba(0, 0, 0, 0.9);
+    --navbar-brand: rgba(0, 0, 0, 0.9);
     --primary-outline: rgba(86, 203, 103, 0.5);
     --masthead-haze1: rgba(107, 128, 112 0.3);
     --masthead-haze2: rgba(107, 128, 112 0.5);
@@ -46,6 +46,9 @@
     --light: #f8f9fa;
     --dark: #343a40;
     --model-button: #FDC830;
+    --gray-grad-fallback: #485563; /* fallback for old browsers */
+    --gray-grad1: -webkit-linear-gradient(to right, #29323c, #485563); /* Chrome 10-25, Safari 5.1-6 */
+    --gray-grad2: linear-gradient(to right, #29323c, #485563); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     --card-bg: transparent;
     /*rgba(255, 255, 255, 0.6);*/
     --breakpoint-xs: 0;
@@ -64,8 +67,30 @@
 }
 
 .bg-gray {
-  background:var(--gray);
+    background: var(--gray);
 
+}
+
+.bg-light-gray-grad{
+    background: #8e9eab; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #8e9eab, #9faab3); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #8e9eab, #9faab3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+#purp-jumbo {
+    background: #4e54c8; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #8f94fb, #4e54c8); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #8f94fb, #4e54c8); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+
+
+.bg-gray-grad {
+    background: var(--gray-grad-fallback);
+    background: var(--gray-grad1);
+    background: var(--gray-grad2);
 }
 
 html {
@@ -6530,6 +6555,11 @@ button.bg-danger:focus {
     background-color: var(--card-bg);
 }
 
+.bg-dark {
+    background-color: var(--dark) !important;
+}
+
+
 .bg-light {
     background-color: #f8f9fa !important;
 }
@@ -6540,8 +6570,9 @@ button.bg-light:focus {
     background-color: #dae0e5 !important;
 }
 
-.bg-dark {
-    background-color: #343a40 !important;
+hr.divider.bg-dark {
+    background-color: var(--dark) !important;
+    border-color: var(--dark);
 }
 
 a.bg-dark:hover, a.bg-dark:focus,
@@ -10415,8 +10446,8 @@ hr.light {
 }
 
 .card-button {
-  margin: auto auto 0 auto;
-  background: var(--light);
+    margin: auto auto 0 auto;
+    background: var(--light);
 }
 
 .page-section {
@@ -10455,7 +10486,7 @@ hr.light {
 @media (min-width: 992px) {
     #mainNav {
         box-shadow: none;
-      background: none;
+        background: none;
     }
 
     #mainNav .navbar-brand {
@@ -10482,12 +10513,13 @@ hr.light {
     #mainNav.navbar-scrolled {
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         background: var(--dark); /* fallback for old browsers */
+
         transition: background .2s ease-in-out;
     }
 
     #mainNav.navbar-scrolled-2 {
-      background: -webkit-linear-gradient(to right, #56ab2f, #a8e063); /* Chrome 10-25, Safari 5.1-6 */
-      background: linear-gradient(to right, #56ab2f, #a8e063);
+        background: -webkit-linear-gradient(to right, #56ab2f, #a8e063); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #56ab2f, #a8e063);
     }
 
     #mainNav.navbar-scrolled .navbar-brand {
@@ -10510,7 +10542,7 @@ hr.light {
 header.masthead {
     padding-top: 10rem;
     padding-bottom: calc(10rem - 72px);
-    background: linear-gradient(to bottom, rgba(0,0,0,.6) 0%, rgba(0,0,0,.5) 100%), url("../img/nyt.jpg");
+    background: linear-gradient(to bottom, rgba(0, 0, 0, .6) 0%, rgba(0, 0, 0, .5) 100%), url("../img/nyt.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: scroll;
@@ -10585,7 +10617,7 @@ header.masthead h1 {
     opacity: 1;
 }
 
-.model-button{
-  background:var(--model-button);
-  font-family: var(--font-family-sans-serif);
+.model-button {
+    background: var(--model-button);
+    font-family: var(--font-family-sans-serif);
 }
