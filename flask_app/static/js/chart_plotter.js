@@ -138,7 +138,6 @@ let chartOptions = {
                 },
                 scaleLabel: {
                     display: true,
-                    lineHeight: 5,
                     labelString: 'Sentiment Score',
                     fontSize:20,
                     fontFamily:"Merriweather Sans"
