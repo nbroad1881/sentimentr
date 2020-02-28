@@ -24,13 +24,11 @@ const CANDIDATES = [TRUMP, BIDEN, WARREN, HARRIS, SANDERS, BUTTIGIEG];
 
 
 const LINE_COLORS = {};
-LINE_COLORS[ALL_NEWS_GROUPS] = "rgba(192, 57, 43, 1)";
-LINE_COLORS[TEXTBLOB] = "rgba(192, 57, 43, 1)";
+LINE_COLORS[ALL_NEWS_GROUPS] = "rgba(248, 51, 60, 1)";
+LINE_COLORS[TEXTBLOB] = "rgba(248, 51, 60, 1)";
 LINE_COLORS[VADER] = "rgba(104, 192, 43, 1)";
 LINE_COLORS[LSTM] = "rgba(43, 178, 192, 1)";
 LINE_COLORS[BERT] = "rgba(131, 43, 192, 1)";
-
-const DEFAULT_NUM_DAYS = 180;
 
 const CNN_KEY = 'cnn';
 const FOX_KEY = 'fox news';
@@ -51,14 +49,6 @@ const BERT_SCORE_KEY = 'bert_score';
 const NEWS_CO_KEY = 'news_co';
 const URL_KEY = 'url';
 const TITLE_KEY = 'title';
-
-// const LABEL_KEY = {};
-// LABEL_KEY[CNN_KEY] = 'CNN';
-// LABEL_KEY[FOX_KEY] = 'Fox News';
-// LABEL_KEY[NYT_KEY] = 'The New York Times';
-// LABEL_KEY[LSTM_SCORE_KEY] = 'LSTM';
-// LABEL_KEY[TEXTBLOB_SCORE_KEY] = 'TextBlob';
-// LABEL_KEY[VADER_SCORE_KEY] = 'VADER';
 
 const LABEL_TO_KEY = {};
 LABEL_TO_KEY['TextBlob'] = TEXTBLOB_SCORE_KEY;
@@ -111,10 +101,9 @@ let chartOptions = {
 
         },
         title: {
-            display: false,
-            text: '',
-            fontSize: 30
-
+            display: true,
+            fontSize: 30,
+            text: 'Sentiment score over time (hover for article title)',
         },
         legend: {
             display: false,
@@ -124,12 +113,17 @@ let chartOptions = {
                 // type: 'time',
                 display: true,
                 // todo: figure out whether to have constant time increments, or constant space between points
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Date',
-                },
+                // scaleLabel: {
+                //     display: true,
+                //     labelString: 'Date',
+                //     lineHeight: 5,
+                //     fontSize:20,
+                //     fontFamily:"Merriweather Sans"
+                // },
                 ticks: {
                     source: 'data',
+                    fontFamily:"Merriweather Sans",
+                    fontSize:16,
                     callback: function (value, index, values) {
                         return value.slice(0, 10);
                     }
@@ -142,7 +136,17 @@ let chartOptions = {
                     min: -1,
                     max: 1,
                 },
-
+                scaleLabel: {
+                    display: true,
+                    lineHeight: 5,
+                    labelString: 'Sentiment Score',
+                    fontSize:20,
+                    fontFamily:"Merriweather Sans"
+                },
+                ticks: {
+                    fontFamily:"Merriweather Sans",
+                    fontSize: 18,
+                }
             }]
         },
     }
@@ -248,7 +252,7 @@ function add_datasets(candidate) {
                 label: candidate + '-' + n + '-' + m,
                 // todo: remove when all candidates work
                 data: plotting_data[candidate][n][m],
-                borderColor: "rgba(192, 57, 43, 1)",
+                borderColor: "rgba(248, 51, 60, 1)",
                 hidden: true,
                 fill: false,
                 titles: plotting_data[candidate][n]['title'],
@@ -302,8 +306,8 @@ function modifyButtons(btn_id) {
         outline += 'primary';
         parentSelector = '#model-selector';
     } else if (dark_button_ids.includes(btn_id)) {
-        highlight += 'dark';
-        outline += 'dark';
+        highlight += 'secondary';
+        outline += 'secondary';
         parentSelector = '#candidate-selector';
     } else if (success_button_ids.includes(btn_id)) {
         highlight += 'success';
