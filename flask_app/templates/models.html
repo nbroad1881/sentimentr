@@ -1,8 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="jumbotron mt-5 bg-dark">
-        <h1>Model Details</h1>
+    <div id='purp-jumbo' class="jumbotron mt-5">
+        <h1 class="text-center text-light">Model Details</h1>
     </div>
+
+    <section>
+    <div class="container">
+        <h2 class="text-center">TextBlob</h2>
+        <div class="container">
+            <p>TextBlob is a pre-made package that was meant to be a baseline to compare the custom models against.
+                The analyzer is created from taking a naive Bayesian approach to a nltk corpus of 4 million movie reviews labeled with negative or positive tags. In essence, the model looks at the prevalance of words near other words and then looks at what sentiment the sample has.  It starts by saying, "When the label is negative/positive, I notice that these words are often together. I'll keep track of that." When it is used on new information, the thought process is reversed: "Now I see these words, and from my memory I recall them seeing them labeled as negative/positive x% amount of the time. I'll use that to guess negative/positive."
+
+                It required virtually no effort to implement, and it scored barely better than random guessing. It likely did not do very well because </p>
+        </div>
+
+    </div>
+    </section>
 
 
 {% endblock content %}
