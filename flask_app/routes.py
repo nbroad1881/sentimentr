@@ -54,6 +54,10 @@ DEFAULT_NUM_TO_QUERY = 100
 def home():
     return render_template("home.html"), 200
 
+@app.route("/models")
+def models():
+    return render_template("models.html"), 200
+
 
 @app.route("/urls", methods=["GET"])
 def urls():
