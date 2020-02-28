@@ -1,155 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Sentiment Analysis</title>
-    <!-- Required meta tags -->
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Sentimentr</title>
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.min.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
-    <script
-            src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180"
+          href="{{ url_for('static', filename='favicons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="{{ url_for('static', filename='favicons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="{{ url_for('static', filename='favicons/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='favicons/site.webmanifest') }}">
+
+
+    <!-- Font Awesome Icons -->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
+          type="text/css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic'
+          rel='stylesheet' type='text/css'>
+
+    <!-- Plugin CSS -->
+    <link href="{{ url_for('static', filename='vendor/magnific-popup/magnific-popup.css') }}" rel="stylesheet">
+
+    <!-- Theme CSS - Includes Bootstrap -->
+    <link href="{{ url_for('static', filename='css/creative.css') }}" rel="stylesheet">
+
+    <!--    Chart JS    -->
+    <script src="{{ url_for('static', filename='vendor/chart/Chart.bundle.min.js') }}"></script>
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>#}
+    {#    <script src="https://code.jquery.com/jquery-3.4.1.min.js"#}
+    {#            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="#}
+    {#            crossorigin="anonymous"></script>#}
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ url_for('home') }}">Home <span class="sr-only">(current)</span></a>
-            </li>
-{#            <li class="nav-item">#}
-{#                <a class="nav-link" href="{{ url_for('about') }}">About</a>#}
-{#            </li>#}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Model Types
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-{#                    <a class="dropdown-item" href="{{ url_for('bagofwords') }}">Bag of Words</a>#}
-                    <a class="dropdown-item" href="{{ url_for('vader') }}">VADER</a>
-                    <a class="dropdown-item" href="{{ url_for('textblob') }}">TextBlob</a>
-                    <a class="dropdown-item" href="{{ url_for('lstm') }}">LSTM</a>
-                    <a class="dropdown-item" href="{{ url_for('bert') }}">BERT</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{ url_for('comparison') }}">Compare Models</a>
-                </div>
-            </li>
-        </ul>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+    <div class="container ">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Sentimentr</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse " id="navbarResponsive">
+            <ul class="navbar-nav ml-auto my-2 my-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#models">Models</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#results">Results</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
-<div class="container mt-5">
-    {% block content %}{% endblock content %}
-</div>
-<!-- Footer -->
-<footer class="page-footer pt-4">
 
-    <!-- Footer Links -->
-    {#  <div class="container-fluid text-center text-md-left">#}
-    {##}
-    {#    <!-- Grid row -->#}
-    {#    <div class="row">#}
-    {##}
-    {#      <!-- Grid column -->#}
-    {#      <div class="col-md-4 mt-md-0 mt-3">#}
-    {##}
-    {#        <!-- Content -->#}
-    {#        <h5 class="text-uppercase">Footer Content</h5>#}
-    {#        <p>Here you can use rows and columns to organize your footer content.</p>#}
-    {##}
-    {#      </div>#}
-    {#      <!-- Grid column -->#}
-    {##}
-    {#      <hr class="clearfix w-100 d-md-none pb-3">#}
-    {##}
-    {#      <!-- Grid column -->#}
-    {#      <div class="col-md-6 mb-md-0 mb-3">#}
-    {##}
-    {#        <!-- Links -->#}
-    {#        <h5 class="text-uppercase">Links</h5>#}
-    {##}
-    {#        <ul class="list-unstyled">#}
-    {#          <li>#}
-    {#            <a href="#!">Link 1</a>#}
-    {#          </li>#}
-    {#          <li>#}
-    {#            <a href="#!">Link 2</a>#}
-    {#          </li>#}
-    {#          <li>#}
-    {#            <a href="#!">Link 3</a>#}
-    {#          </li>#}
-    {#          <li>#}
-    {#            <a href="#!">Link 4</a>#}
-    {#          </li>#}
-    {#        </ul>#}
-    {##}
-    {#      </div>#}
-    {#      <!-- Grid column -->#}
-    {##}
-    {#      <!-- Grid column -->#}
-    {#      <div class="col-md-6 mb-md-0 mb-3">#}
-    {##}
-    {#        <!-- Links -->#}
-    {#        <h5 class="text-uppercase">Links</h5>#}
-    {##}
-    {#        <ul class="list-unstyled">#}
-    {#          <li>#}
-    {#            <a href="#!">Link 1</a>#}
-    {#          </li>#}
-    {#          <li>#}
-    {#            <a href="#!">Link 2</a>#}
-    {#          </li>#}
-    {#          <li>#}
-    {#            <a href="#!">Link 3</a>#}
-    {#          </li>#}
-    {#          <li>#}
-    {#            <a href="#!">Link 4</a>#}
-    {#          </li>#}
-    {#        </ul>#}
-    {##}
-    {#      </div>#}
-    {#      <!-- Grid column -->#}
-    {##}
-    {#    </div>#}
-    {#    <!-- Grid row -->#}
-    {##}
-    {#  </div>#}
-    <!-- Footer Links -->
 
-    {#  <!-- Copyright -->#}
-    {#  <div class="footer-copyright text-center py-3">Made By:#}
-    {#      <b>Nicholas Broad</b>#}
-    {#  </div>#}
-    {#    <div class="mx-auto LI-profile-badge"  style="width: 300px;" data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="nicholas-broad-7a530263"><a class="LI-simple-link" href='https://www.linkedin.com/in/nicholas-broad-7a530263?trk=profile-badge'>Nicholas Broad</a></div>#}
+{% block content %}
+{% endblock content %}
+
+
+<!-- Contact Section -->
+<section class="bg-dark page-section p-5" id="contact">
+    <div class="container">
+        {#        <div class="row justify-content-center my-5">#}
+        {#            <div class="col-lg-8 text-center">#}
+        {#                <h2 class="mt-0 text-light">Contact</h2>#}
+        {#                <hr class="divider my-0">#}
+        {#            </div>#}
+        {#        </div>#}
+        <div class="row mx-5 mb-5 mt-0">
+            <div class="col-lg-3 ml-auto text-center ">
+                <a href="https://www.linkedin.com/in/nicholas-broad-7a530263" class="d-block">
+                    <i class="fab fa-linkedin fa-3x mb-3 text-light"></i>
+                </a>
+                <a class="d-block text-light" href="https://www.linkedin.com/in/nicholas-broad-7a530263">LinkedIn</a>
+            </div>
+            <div class="col-lg-3 mx-0 text-center">
+                <a href="https://nmbroad.com" class="d-block">
+                    <i class="fas fa-home fa-3x mb-3 text-light"></i>
+                </a>
+                <a class="d-block  text-light" href="https://nmbroad.com">Personal Website</a>
+            </div>
+            <div class="col-lg-3 mr-auto text-center">
+                <a href="mailto:nicholas@nmbroad.com" class="d-block">
+                    <i class="fas fa-envelope fa-3x mb-3 text-light"></i>
+                </a>
+                <a class="d-block  text-light" href="mailto:nicholas@nmbroad.com">Email</a>
+            </div>
+        </div>
+    </div>
+</section>
 
     <!-- Copyright -->
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+<!--{#<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js'#}-->
+<!--{#        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"#}-->
+<!--{#        crossorigin="anonymous"></script>#}-->
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/popper/popper.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-</footer>
-<!-- Footer -->
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+<!-- Plugin JavaScript -->
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='vendor/magnific-popup/jquery.magnific-popup.min.js') }}"></script>
+
+<!-- Custom scripts for this template -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/creative.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/chart_plotter.js') }}"></script>
+
 </body>
+
 </html>
