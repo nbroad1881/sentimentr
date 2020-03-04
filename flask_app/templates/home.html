@@ -2,201 +2,113 @@
 
 
 {% block content %}
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
-    <div class="container ">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">Sentimentr</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse " id="navbarResponsive">
-            <ul class="navbar-nav ml-auto my-2 my-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#about">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#models">Models</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#results">Results</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
-<!-- Masthead -->
-<header class="masthead">
-    <div class="container h-100">
-        <div class="row h-100 align-items-center justify-content-center text-center">
-            <div class="col-lg-10 align-self-end">
-                <h1 class="text-uppercase text-white font-weight-bold">Sentimentr</h1>
-                <hr class="divider my-4">
-            </div>
-            <div class="col-lg-8 align-self-baseline">
-                <p class="text-white font-weight-light mb-5">A sentiment analysis tool to see bias in media titles for
-                    2020 presidential candidates</p>
-                <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find Out More</a>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- About Section -->
-<section class="page-section bg-primary-grad" id="about">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-
-                <h4 class="text-white my-5 ">Sentimentr is a project by Nicholas Broad done in collaboration with
-                    SharpestMinds under the guidance of Tomas Babej. The goal of the project is to see which news
-                    agencies have a bias toward certain candidates, and if trends in popularity of candidates can be
-                    seen in title sentiments.</h4>
-                <a class="btn btn-light btn-xl js-scroll-trigger" href="#models">Models used</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- models Section -->
-<section class="page-section py-5 bg-light-gray-grad" id="models">
-    <div class="container">
-        <h2 class="text-center mt-0 text-light">Models</h2>
-        <hr class="divider my-4 bg-light">
-        <div class="row my-0">
-            <div class="col-lg-3 col-md-6 mx-0 d-flex flex-column text-center p-0">
-                <div class="h-100 d-flex flex-column card bg-card p-3 mx-2">
-                    <i class="fas fa-4x fa-splotch text-light mb-4"></i>
-                    <h3 class="h4 mb-2 text-light">TextBlob</h3>
-                    <p class="d-inline text-light mt-auto mb-3 align-middle">A naive bayes analyzer trained on movie
-                        reviews </p>
-                    <a class="mt-auto mx-auto d-button btn btn-light" href='https://textblob.readthedocs.io/'>
-                        TextBlob Docs
-                    </a>
+    <!-- Masthead -->
+    <header class="masthead" id="pageTop">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center justify-content-center text-center">
+                <div class="col-lg-10 align-self-end">
+                    <h1 class="text-uppercase text-white font-weight-bold">Sentimentr</h1>
+                    <hr class="divider my-4">
                 </div>
-
-            </div>
-            <div class="col-lg-3 col-md-6 mx-0 d-flex flex-column text-center p-0">
-                <div class="h-100 d-flex flex-column card bg-card mx-2 p-3">
-                    <i class="fas fa-4x fa-book text-light mb-4"></i>
-                    <h3 class="h4 mb-2 text-light">VADER</h3>
-                    <p class="text-light  mt-auto mb-3 align-middle">(Valence Aware Dictionary and sEntiment Reasoner) <br><br>
-                        A rule-based lexicon approach designed for social media sentiment</p>
-                    <a class="mt-auto mx-auto  d-button btn btn-light" href='https://github.com/cjhutto/vaderSentiment'>
-                        VADER Docs
-                    </a>
-                </div>
-
-            </div>
-            <div class="col-lg-3 col-md-6 mx-0 d-flex flex-column text-center p-0">
-                <div class="h-100 d-flex flex-column card bg-card mx-2  p-3">
-                    <i class="fas fa-4x fa-undo-alt text-light mb-4"></i>
-                    <h3 class="h4 mb-2 text-light">LSTM</h3>
-                    <p class="text-light mt-auto mb-3 align-middle">(Long Short-Term Memory) <br><br> A recurrent neural network with
-                        feedback for memory trained on news article headlines</p>
-                    <a class="mt-auto mx-auto d-button btn btn-light"
-                       href='https://towardsdatascience.com/illustrated-guide-to-lstms-and-gru-s-a-step-by-step-explanation-44e9eb85bf21'>
-                        LSTM Guide
-                    </a>
-                </div>
-
-            </div>
-            <div class="col-lg-3 col-md-6 mx-0 d-flex flex-column text-center p-0">
-                <div class="h-100 d-flex flex-column card bg-card mx-2 p-3">
-                    <i class="fas fa-4x fa-arrows-alt-h text-light mb-4"></i>
-                    <h3 class="h4 mb-2 text-light">BERT</h3>
-                    <p class="text-light mt-auto mb-3 align-middle">(Bidirectional Encoder Representations) <br> <br>
-                        State-of-the-art transformer trained on news article headlines</p>
-                    <a class="mt-auto mx-auto btn  btn-light" href="http://jalammar.github.io/illustrated-bert/">
-                        BERT Guide
-                    </a>
+                <div class="col-lg-8 align-self-baseline">
+                    <p class="text-white font-weight-light mb-5">A sentiment analysis tool to see bias in media titles
+                        for
+                        2020 presidential candidates</p>
+                    <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find Out More</a>
                 </div>
             </div>
-
         </div>
+    </header>
 
-        <div class="row mt-4 text-center align-content-center">
-            <a class="btn btn-light btn-xl mr-3 ml-auto js-scroll-trigger " href="{{ url_for('.models') }}">Further discussion of models
-{#                <i class="mx-2 fas fa-2x fa-external-link-alt d-block mt-1"></i>#}
-            </a>
+    <!-- About Section -->
+    <section class="page-section bg-primary-grad change-point" id="about">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
 
-            <a class="btn btn-light btn-xl ml-3 mr-auto js-scroll-trigger " href="#results">Recent results
-{#                <i class="fas fa-2x fa-arrow-alt-circle-down d-block mt-1"></i>#}
-            </a>
-        </div>
-    </div>
-</section>
-
-
-<section class="page-section bg-white pt-4" id='results'>
-    <div class="container">
-        <h2 class="text-center mt-0">Results</h2>
-        {#        todo: have a spot for users to input a sample sentence#}
-        {#                  Date Start: <input type="date" name="date-start">#}
-        {#                  Date End: <input type="date" name="date-end">#}
-        {#                    Sample Sentence: <input type="text" name="sample" id="text-field">#}
-        {#                  <label class='btn btn-dark text-center' id="text-button">Submit</label><br>#}
-        <hr class="divider bg-dark">
-
-    </div>
-    <div id="update-nav" class="my-2">
-        <div id="model-selector" class="text-center my-2">
-            <input type="button" id="TextBlob"
-                   class="mx-1  btn btn-primary d-inline filter-btn ui-button model-btn selected-feature"
-                   value="TextBlob"/>
-            <input type="button" id="VADER"
-                   class="mx-1  btn btn-outline-primary d-inline filter-btn ui-button model-btn" value="VADER"/>
-            <input type="button" id="LSTM"
-                   class="mx-1  btn btn-outline-primary d-inline filter-btn ui-button model-btn" value="LSTM"/>
-            <input type="button" id="BERT"
-                   class="mx-1  btn btn-outline-primary d-inline filter-btn ui-button model-btn" value="BERT"/>
-            {#                <input type="button" id="all-models" class="mx-1 my-2 btn btn-outline-primary btn-outline-primary d-inline filter-btn ui-button model-btn" value="All Models"/>#}
-        </div>
-        <div id="candidate-selector" class="text-center my-2">
-            <input type="button" id="trump"
-                   class="mx-1  btn btn-secondary d-inline filter-btn ui-button selected-feature candidate-btn"
-                   value="Donald Trump"/>
-            <input type="button" id="biden"
-                   class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
-                   value="Joe Biden"/>
-            <input type="button" id="warren"
-                   class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
-                   value="Elizabeth Warren"/>
-            <input type="button" id="sanders"
-                   class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
-                   value="Bernie Sanders"/>
-            <input type="button" id="harris"
-                   class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
-                   value="Kamala Harris"/>
-            <input type="button" id="buttigieg"
-                   class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
-                   value="Pete Buttigieg"/>
-        </div>
-
-        <div id="news-co-selector" class="text-center my-2">
-            <input type="button" id="CNN"
-                   class="mx-1 btn btn-success d-inline ui-button news-btn filter-btn  selected-feature"
-                   value="CNN"/>
-            <input type="button" id="Fox-News"
-                   class="mx-1 btn btn-outline-success d-inline ui-button news-btn filter-btn" value="Fox News"/>
-            <input type="button" id="The-New-York-Times"
-                   class="mx-1 btn btn-outline-success d-inline news-btn filter-btn ui-button"
-                   value="New York Times"/>
-            {#                <input type="button" id="all-news" class="mx-1 my-2 btn btn-outline-success d-inline  ui-button news-btn filter-btn" value="All Three"/>#}
-        </div>
-
-        <!-- CHART -->
-        <div class="d-flex justify-content-center m-auto">
-            <div style="position: relative; height:60vh; width:90vw">
-                <canvas class="p-0" id="myChart" style="background-color: white"></canvas>
+                    <h4 class="text-white my-5 ">Sentimentr is a project by Nicholas Broad done in collaboration with
+                        SharpestMinds under the guidance of Tomas Babej. The goal of the project is to see which news
+                        news sources have a bias toward certain candidates, and if trends in popularity of candidates
+                        can be
+                        seen in title sentiments.</h4>
+                    <a class="btn btn-light btn-xl js-scroll-trigger" href="#models">Models used</a>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- models Section -->
+    {% include "model-cards.html" ignore missing %}
 
 
-</section>
+    <section class="page-section bg-white pt-4" id='results'>
+        <div class="container">
+            <h2 class="text-center mt-0">Results</h2>
+            {#        todo: have a spot for users to input a sample sentence#}
+            {#                  Date Start: <input type="date" name="date-start">#}
+            {#                  Date End: <input type="date" name="date-end">#}
+            {#                    Sample Sentence: <input type="text" name="sample" id="text-field">#}
+            {#                  <label class='btn btn-dark text-center' id="text-button">Submit</label><br>#}
+            <hr class="divider bg-dark">
+
+        </div>
+        <div id="update-nav" class="my-2">
+            <div id="model-selector" class="text-center my-2">
+                <input type="button" id="TextBlob"
+                       class="mx-1  btn btn-primary d-inline filter-btn ui-button model-btn selected-feature"
+                       value="TextBlob"/>
+                <input type="button" id="VADER"
+                       class="mx-1  btn btn-outline-primary d-inline filter-btn ui-button model-btn" value="VADER"/>
+                <input type="button" id="LSTM"
+                       class="mx-1  btn btn-outline-primary d-inline filter-btn ui-button model-btn" value="LSTM"/>
+                <input type="button" id="BERT"
+                       class="mx-1  btn btn-outline-primary d-inline filter-btn ui-button model-btn" value="BERT"/>
+                {#                <input type="button" id="all-models" class="mx-1 my-2 btn btn-outline-primary btn-outline-primary d-inline filter-btn ui-button model-btn" value="All Models"/>#}
+            </div>
+            <div id="candidate-selector" class="text-center my-2">
+                <input type="button" id="trump"
+                       class="mx-1  btn btn-secondary d-inline filter-btn ui-button selected-feature candidate-btn"
+                       value="Donald Trump"/>
+                <input type="button" id="biden"
+                       class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
+                       value="Joe Biden"/>
+                <input type="button" id="warren"
+                       class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
+                       value="Elizabeth Warren"/>
+                <input type="button" id="sanders"
+                       class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
+                       value="Bernie Sanders"/>
+                <input type="button" id="harris"
+                       class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
+                       value="Kamala Harris"/>
+                <input type="button" id="buttigieg"
+                       class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
+                       value="Pete Buttigieg"/>
+            </div>
+
+            <div id="news-co-selector" class="text-center my-2">
+                <input type="button" id="CNN"
+                       class="mx-1 btn btn-success d-inline ui-button news-btn filter-btn  selected-feature"
+                       value="CNN"/>
+                <input type="button" id="Fox-News"
+                       class="mx-1 btn btn-outline-success d-inline ui-button news-btn filter-btn" value="Fox News"/>
+                <input type="button" id="The-New-York-Times"
+                       class="mx-1 btn btn-outline-success d-inline news-btn filter-btn ui-button"
+                       value="New York Times"/>
+                {#                <input type="button" id="all-news" class="mx-1 my-2 btn btn-outline-success d-inline  ui-button news-btn filter-btn" value="All Three"/>#}
+            </div>
+
+            <!-- CHART -->
+            <div class="d-flex justify-content-center mx-auto mb-5 pb-5">
+                <div style="position: relative; height:60vh; width:90vw">
+                    <canvas class="p-0" id="myChart" style="background-color: white"></canvas>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
 
 {% endblock content %}
 
