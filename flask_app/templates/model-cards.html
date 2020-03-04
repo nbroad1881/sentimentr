@@ -1,0 +1,104 @@
+{% block content %}
+
+    <section class="page-section py-5 bg-light-gray-grad" id="models">
+        {#        <div class=" card-deck ">#}
+        <div class="card-group justify-content-center row px-lg-5 px-md-3">
+
+            <div class="my-3 col-lg-3 col-md-6 col-sm-8">
+                <div class="card text-center pt-5 pb-3 h-100">
+                    <i class="fas fa-4x fa-splotch model-logo"></i>
+
+                    <div class="card-body d-flex flex-column">
+
+                        <h3 class="card-title">TextBlob</h3>
+                        <p>A naive bayes analyzer trained on movie reviews </p>
+                        <div class="mt-auto pt-3">
+                            <a class="btn btn-light btn-xl" href='https://textblob.readthedocs.io/'>
+                                TextBlob Docs
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="my-3 col-lg-3 col-md-6 col-sm-8">
+                <div class="card text-center pt-5 pb-3 h-100">
+                    <i class="fas fa-4x fa-book model-logo"></i>
+
+                    <div class="card-body d-flex flex-column">
+
+                        <h3 class="card-title">VADER</h3>
+                        <p>(Valence Aware Dictionary and sEntiment Reasoner)</p>
+
+                        <p>A rule-based lexicon approach designed for social media sentiment</p>
+
+                        <div class="mt-auto pt-3">
+                            <a class="btn btn-light btn-xl"
+                               href='https://github.com/cjhutto/vaderSentiment'>
+                                VADER Docs
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="my-3 col-lg-3 col-md-6 col-sm-8">
+                <div class="card text-center pt-5 pb-3 h-100">
+                    <i class="fas fa-4x fa-undo-alt model-logo"></i>
+                    <div class="card-body d-flex flex-column">
+
+                        <h3 class="card-title">LSTM</h3>
+                        <p>(Long Short-Term Memory)</p>
+                        <p class="card-text"> A recurrent
+                            neural network with
+                            feedback for memory trained on news article headlines</p>
+                        <div class="mt-auto pt-3">
+                            <a class="btn btn-light btn-xl"
+                               href='https://towardsdatascience.com/illustrated-guide-to-lstms-and-gru-s-a-step-by-step-explanation-44e9eb85bf21'>
+                                LSTM Guide
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="my-3 col-lg-3 col-md-6 col-sm-8">
+                <div class="card text-center pt-5 pb-3 h-100">
+                    <i class="fas fa-4x fa-arrows-alt-h model-logo"></i>
+
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="card-title">BERT</h3>
+                        <p>(Bidirectional Encoder Representations) </p>
+                        <p class="text-light">
+                            State-of-the-art transformer trained on news article headlines</p>
+                        <div class="mt-auto pt-3">
+                            <a class="btn btn-light btn-xl" href="http://jalammar.github.io/illustrated-bert/">
+                                BERT Guide
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="row mt-4 d-flex justify-content-center">
+
+                <div class="col-12 col-md-4 d-flex flex-column">
+                    <a class="btn btn-dark  btn-xl js-scroll-trigger" href="{{ url_for('.models') }}">Further
+                        discussion of models
+                    </a>
+                </div>
+
+                <div class="col-12 col-md-4 my-3 my-md-0 d-flex justify-content-center align-items-stretch">
+                    <a class="btn btn-dark  btn-xl  js-scroll-trigger d-flex flex-column justify-content-center" href="#results">Recent results
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+{% endblock content %}
