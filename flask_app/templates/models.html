@@ -1,20 +1,137 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div id='purp-jumbo' class="jumbotron mt-5">
-        <h1 class="text-center text-light">Model Details</h1>
+    <div id='purp-jumbo' class="jumbotron my-0 py-5 ">
+        <h1 class="text-center text-light py-5 my-3">Model Details</h1>
     </div>
 
-    <section>
-    <div class="container">
-        <h2 class="text-center">TextBlob</h2>
-        <div class="container">
-            <p>TextBlob is a pre-made package that was meant to be a baseline to compare the custom models against.
-                The analyzer is created from taking a naive Bayesian approach to a nltk corpus of 4 million movie reviews labeled with negative or positive tags. In essence, the model looks at the prevalance of words near other words and then looks at what sentiment the sample has.  It starts by saying, "When the label is negative/positive, I notice that these words are often together. I'll keep track of that." When it is used on new information, the thought process is reversed: "Now I see these words, and from my memory I recall them seeing them labeled as negative/positive x% amount of the time. I'll use that to guess negative/positive."
+    <section class="change-point">
+        <div class="container-fluid" >
 
-                It required virtually no effort to implement, and it scored barely better than random guessing. It likely did not do very well because </p>
+            <div class="row p-5 justify-content-center">
+
+                <div class="col-12 col-lg-6" id="textblob">
+                    <h2 class="text-center">TextBlob</h2>
+                    <hr class="divider bg-dark">
+                    <p>TextBlob is a pre-made package that is used as a baseline to compare the custom models
+                        against.</p>
+
+                    <p> The analyzer is a naive Bayesian approach trained on a nltk corpus of 4 million movie reviews
+                        labeled with negative or positive tags.</p>
+
+                    <p>In essence, the model looks at the prevalance of words near other words and then looks at what
+                        sentiment the sample has. It starts by saying, </p>
+
+                    <p><em>"When the label is negative/positive, I notice
+                        that these words are often together."</em></p>
+                    <p> When it is used on new information, the thought process is reversed: </p>
+
+                    <p><em>"Now I see these words, and from my memory I recall them being labeled as negative/positive
+                        most of the time. I'll use that to guess negative/positive."</em></p>
+
+                    <p>It can be useful in some instances, but it can't capture all of the nuances of language because
+                        it works under the
+                        (false) assumption that each word is independent from the others.</p>
+
+                    <p>It scores barely better than random guessing.
+                        It
+                        likely did not do very well because of a few factors. One being that it was trained on movie
+                        reviews and not news headlines. Two for the aforementioned reason that each word is not
+                        independent from the others.</p>
+                </div>
+
+                <div class="col-12 col-lg-6 my-auto justify-content-center align-items-center ">
+                    <h1 class="text-center display-2">31% Accuracy</h1>
+                </div>
+            </div>
+
+            <div class="row p-5 justify justify-content-center salmon">
+                <div class="col-12 col-lg-6 order-2 order-lg-1 my-auto text-center justify-content-center align-items-center ">
+{#                    <i class="fas fa-10x fa-book"></i>#}
+                    <h1 class="text-center display-2 text-light">36% Accuracy</h1>
+                </div>
+
+                <div class="col-12 col-lg-6 order-1 order-lg-2" id="vader">
+
+                    <h2 class="text-center text-light">VADER</h2>
+                    <hr class="divider bg-light">
+                    <p class="text-light">VADER is another pre-made package built on a rule-based model that is designed to work well in
+                        microblog contexts, especially social media. This was another model to test against the custom
+                        models.</p>
+
+                    <p class="text-light"> VADER stands for Valence Aware Dictionary and sEntiment Reasoner. In this context valence refers
+                        to the intensity of sentiment. Prior rule-based models made two groups: negative and positive.
+                        Words like bad had the same weight as horrendous. In forming this distinction, VADER hopes to
+                        capture more of the nuances in language.</p>
+
+                    <p class="text-light">The model does about the same as randomly guessing. </p>
+
+                </div>
+            </div>
+        </div>
         </div>
 
-    </div>
+        <div class="container-fluid">
+            <div class="row p-5 deep-purple justify-content-center">
+
+
+                <div class="col-12 col-lg-6" id="lstm">
+                    <h2 class="text-center text-light">LSTM</h2>
+                    <hr class="divider bg-light">
+
+                    <p class="text-light">An LSTM is a type of recurrent neural network (RNN) that has a mechanism to remember long-term
+                        dependencies. Vanilla RNNs also have the mechanism to use previous information, but information
+                        usually gets lost as time progresses. LSTMs, however, have a cell-state that enables a long-term
+                        memory that can be updated or preserved with each time step.</p>
+
+                    <p class="text-light"> The LSTM is trained in fast.ai's style using ULMFiT. It starts with a fully-trained LSTM, and
+                        then gets fine-tuned on news data. The news data had to be manually labeled, resulting in only
+                        about 1,000 samples. 😩 </p>
+
+                    <p class="text-light">After training the language model, the same data gets split into training and validation sets,
+                        and the typical training process ensues. Since there is so little data to use, the training
+                        process is very quick.</p>
+
+                    <p class="text-light">
+                        The model does much better than the out-of-the-box approaches, but still has much room for
+                        improvement. Having more training data is likely to help, which would require more time manually
+                        labeling headlines.
+                    </p>
+
+                </div>
+                <div class="col-12 col-lg-6 my-auto text-center justify-content-center align-items-center ">
+{#                    <i class="fas fa-10x fa-undo-alt "></i>#}
+
+                    <h1 class="text-center text-light display-2">56% Accuracy</h1>
+                </div>
+            </div>
+            <div class="row px-5 py-5 orangey justify-content-center">
+
+                <div class="col-12 col-lg-6 order-2 order-lg-1 my-auto text-center justify-content-center align-items-center ">
+{#                    <i class="fas fa-10x fa-arrows-alt-h"></i>#}
+                    <h1 class="text-center text-light display-2">68% Accuracy</h1>
+                </div>
+                <div class="col-12 col-lg-6 order-1 order-lg-2" id="bert">
+                    <h2 class="text-center text-light ">BERT</h2>
+                    <hr class="divider bg-light">
+                    <p class="text-light">BERT is a relatively new architecture that is based on transformer and self-attention models.</p>
+
+                    <p class="text-light"> BERT stands for Bidirectional Encoder Representations from Transformers. The bidirectional part
+                        refers to its ability to look at both the right and left contexts to better understand the
+                        complete sentence. The aforementioned LSTM can only look at which words are to the left of the
+                        current word it is focusing on. Being able to look at the full sentence allows BERT to better
+                        understand sentences.</p>
+
+                    <p></p>
+
+                    <p class="text-light">
+                        The model does much better than the out-of-the-box approaches, but still has much room for
+                        improvement. Having more training data is likely to help, which would require more time manually
+                        labeling headlines.
+                    </p>
+
+                </div>
+            </div>
+        </div>
     </section>
 
 
