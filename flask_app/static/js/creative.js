@@ -28,7 +28,7 @@
 
   // Collapse Navbar
   var navbarCollapse = function() {
-    if ($("#mainNav").offset().top + $(".masthead").height() > $("#about").offset().top) {
+    if ($("#mainNav").offset().top + $("#mainNav").outerHeight() + 50 > $(".change-point").offset().top) {
       $("#mainNav").addClass("navbar-scrolled");
     } else {
       $("#mainNav").removeClass("navbar-scrolled");
