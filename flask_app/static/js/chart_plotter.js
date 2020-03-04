@@ -231,7 +231,6 @@ function showDataset(candidate, news_co, model, toggle) {
     model = model.replace('-', ' ');
     setLabels(candidate, news_co);
 
-    console.log(model, chart.data);
     chart.data.datasets.forEach(ds => {
         if (ds.label === candidate + '-' + news_co + '-' + model) {
             if (toggle) {
@@ -287,9 +286,7 @@ function toggleView(btn_id) {
     }
 
     showDataset(candidate, news_co, model, false);
-    console.log(chart);
     chart.update();
-    console.log(chart);
 }
 
 let primary_button_ids = ['TextBlob', 'LSTM', 'VADER', 'BERT', 'all-models'];
