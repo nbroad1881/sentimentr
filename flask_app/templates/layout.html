@@ -8,6 +8,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <meta property="og:title" content="Sentimentr"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="{{ url_for('static', filename='img/og-img.jpg') }}"/>
+    <meta property="og:description"
+          content="A tool to measure sentiment in news headlines for 2020 presidential candidates"/>
+    <meta property="og:url" content="https://sentimentr.nmbroad.com"/>
+
     <title>Sentimentr</title>
 
     <!-- Favicon -->
@@ -42,29 +49,55 @@
     {#            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="#}
     {#            crossorigin="anonymous"></script>#}
 </head>
-<body>
+<body id="'pageTop">
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 {{'purp' if title=='models'}}" id="mainNav">
     <div class="container ">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">Sentimentr</a>
+        {% if title=='home' %}
+            <a class="navbar-brand js-scroll-trigger" href="#pageTop">Sentimentr</a>
+        {% else %}
+            <a class="navbar-brand js-scroll-trigger" href="/">Sentimentr</a>
+        {% endif %}
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <i class="fas fa-bars"></i>
         </button>
+
         <div class="collapse navbar-collapse " id="navbarResponsive">
             <ul class="navbar-nav ml-auto my-2 my-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#about">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#models">Models</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#results">Results</a>
-                </li>
+                {% if title=='home' %}
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#models">Models</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#results">Results</a>
+                    </li>
+                {% endif %}
+
+                {% if title=='models' %}
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#textblob">TextBlob</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#vader">VADER</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#lstm">LSTM</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#bert">BERT</a>
+                    </li>
+
+                {% endif %}
             </ul>
         </div>
+
+
     </div>
 </nav>
 
@@ -74,28 +107,22 @@
 
 
 <!-- Contact Section -->
-<section class="bg-gray-grad page-section p-4" id="contact">
+<section class="bg-gray-grad page-section px-1 px-sm-3 py-4" id="contact">
     <div class="container">
-        {#        <div class="row justify-content-center my-5">#}
-        {#            <div class="col-lg-8 text-center">#}
-        {#                <h2 class="mt-0 text-light">Contact</h2>#}
-        {#                <hr class="divider my-0">#}
-        {#            </div>#}
-        {#        </div>#}
-        <div class="row mx-5 my-0">
-            <div class="col-lg-3 ml-auto text-center ">
+        <div class="row justify-content-center my-0">
+            <div class="col-4 col-sm-3  text-center ">
                 <a href="https://www.linkedin.com/in/nicholas-broad-7a530263" class="d-block">
                     <i class="fab fa-linkedin fa-2x mb-3 text-light"></i>
                 </a>
                 <a class="d-block text-light" href="https://www.linkedin.com/in/nicholas-broad-7a530263">LinkedIn</a>
             </div>
-            <div class="col-lg-3 mx-0 text-center">
+            <div class="col-4 col-sm-3  text-center">
                 <a href="https://nmbroad.com" class="d-block">
                     <i class="fas fa-home fa-2x mb-3 text-light"></i>
                 </a>
                 <a class="d-block  text-light" href="https://nmbroad.com">Personal Website</a>
             </div>
-            <div class="col-lg-3 mr-auto text-center">
+            <div class="col-4 col-sm-3  text-center">
                 <a href="mailto:nicholas@nmbroad.com" class="d-block">
                     <i class="fas fa-envelope fa-2x mb-3 text-light"></i>
                 </a>
@@ -105,7 +132,7 @@
     </div>
 </section>
 
-    <!-- Copyright -->
+<!-- Copyright -->
 <!-- Bootstrap core JavaScript -->
 <script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
 <!--{#<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js'#}-->
