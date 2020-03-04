@@ -52,11 +52,11 @@ DEFAULT_NUM_TO_QUERY = 100
 # todo: make table object to avoid update error (table.c)
 @app.route("/")
 def home():
-    return render_template("home.html"), 200
+    return render_template("home.html", title='home'), 200
 
 @app.route("/models")
 def models():
-    return render_template("models.html"), 200
+    return render_template("models.html", title='models'), 200
 
 
 @app.route("/urls", methods=["GET"])
