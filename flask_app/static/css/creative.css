@@ -27,9 +27,9 @@
     --primary: #56ab2f;
     --primary-bg: #56ab2f;
     /*#1F9530;*/
-    --primary-hover: #12AB28;
+    --primary-hover: #2FAB46;
     --navbar-brand: rgba(255, 255, 255, 0.7);
-    --primary-outline: rgba(86, 203, 103, 0.5);
+    --primary-outline: rgba(47, 171, 70, 0.5);
     --masthead-haze1: rgba(107, 128, 112 0.3);
     --masthead-haze2: rgba(107, 128, 112 0.5);
     --third: #246EB9;
@@ -42,9 +42,9 @@
     --tenth: #D81E5B;
     --eleventh: #28AFB0;
     --secondary: #FCAB10;
-    --secondary-bg: #FC9F10;
+    --secondary-bg: #FCAB10;
     --secondary-hover: #FFCC21;
-    --secondary-outline: rgba(252, 209, 16, 0.5);
+    --secondary-outline: rgba(252, 171, 16, 0.5);
     --success: #104F55;
     --success-bg: #104F55;
     --success-hover: #195E66;
@@ -73,6 +73,10 @@
 *::before,
 *::after {
     box-sizing: border-box;
+}
+
+.sand {
+    background: #FFFFF2;
 }
 
 .bg-gray {
@@ -2530,8 +2534,9 @@ fieldset:disabled a.btn {
 
 .btn-primary:hover {
     color: #fff;
-    background-color: var(--primary-hover);
-    border-color: var(--primary-hover);
+    /*background-color: var(--primary-hover);*/
+    /*border-color: var(--primary-hover);*/
+  filter: brightness(110%);
 }
 
 .btn-primary:focus, .btn-primary.focus {
@@ -2542,6 +2547,7 @@ fieldset:disabled a.btn {
     color: #fff;
     background-color: var(--primary);
     border-color: var(--primary);
+    filter: brightness(80%);
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
