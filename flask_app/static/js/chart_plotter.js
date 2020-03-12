@@ -36,16 +36,16 @@ const NYT_KEY = 'the new york times';
 
 const NEWS_KEYS = [CNN_KEY, FOX_KEY, NYT_KEY];
 const NEWS_KEYS_TO_NAMES = {};
-NEWS_KEYS_TO_NAMES[CNN_KEY]=  CNN;
-NEWS_KEYS_TO_NAMES[NYT_KEY]= NYT;
-NEWS_KEYS_TO_NAMES[FOX_KEY]= FOX;
+NEWS_KEYS_TO_NAMES[CNN_KEY] = CNN;
+NEWS_KEYS_TO_NAMES[NYT_KEY] = NYT;
+NEWS_KEYS_TO_NAMES[FOX_KEY] = FOX;
 
 
 const DATETIME_KEY = 'datetime';
-const LSTM_SCORE_KEY = 'lstm_score';
-const TEXTBLOB_SCORE_KEY = 'textblob_score';
-const VADER_SCORE_KEY = 'vader_score';
-const BERT_SCORE_KEY = 'bert_score';
+const LSTM_SCORE_KEY = 'lstm';
+const TEXTBLOB_SCORE_KEY = 'textblob';
+const VADER_SCORE_KEY = 'vader';
+const BERT_SCORE_KEY = 'bert';
 const NEWS_CO_KEY = 'news_co';
 const URL_KEY = 'url';
 const TITLE_KEY = 'title';
@@ -63,106 +63,114 @@ LABEL_TO_KEY['The-New-York-Times'] = NYT_KEY;
 const NEWS_COMPANY_KEYS = [CNN_KEY, FOX_KEY, NYT_KEY];
 const MODEL_KEYS = [LSTM_SCORE_KEY, TEXTBLOB_SCORE_KEY, VADER_SCORE_KEY, BERT_SCORE_KEY];
 
-
+let chart;
 let plotting_data = {};
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    const ctx = document.getElementById('myChart').getContext('2d');
+    let chartOptions = {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{}],
+        },
 
-const ctx = document.getElementById('myChart').getContext('2d');
-let chartOptions = {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{}],
-    },
+        options: {
+            tooltips: {
+                callbacks: {
+                    title: function (tooltipItem, data) {
+                        return round_to_three(tooltipItem[0].value);
+                    },
+                    label: function (tooltipItem, data) {
+                        date = new Date(tooltipItem.label);
+                        return date.toDateString();
+                    },
+                },
+                titleFontSize: 18,
+                bodyFontSize: 16,
+                footerFontSize: 16,
+                mode: 'nearest',
+                intersect: false,
 
-    options: {
-        tooltips: {
-            callbacks: {
-                // todo: figure out how to put title of article for tooltip
-                title: function (tooltipItem, data) {
-                    let current_dataset = data.datasets[tooltipItem[0].datasetIndex];
-                    return data.datasets[tooltipItem[0].datasetIndex].titles[tooltipItem[0].index] || '';
-                },
-                label: function (tooltipItem, data) {
-                    date = new Date(data.labels[tooltipItem['index']]);
-                    news_group = data.datasets[tooltipItem.datasetIndex].news_co;
-                    return NEWS_KEYS_TO_NAMES[news_group] + " - " + date.toDateString() || '';
-                },
-                labelColor: function (tooltipItem, chart) {
-                    return {
-                        borderColor: LINE_COLORS[ALL_NEWS_GROUPS],
-                        backgroundColor: LINE_COLORS[ALL_NEWS_GROUPS],
-                    };
-                },
             },
-            titleFontSize: 18,
-            bodyFontSize: 16,
-            footerFontSize: 16,
-
-        },
-        title: {
-            display: true,
-            fontSize: 30,
-            text: 'Sentiment score over time (hover for article title)',
-        },
-        legend: {
-            display: false,
-        },
-        scales: {
-            xAxes: [{
-                // type: 'time',
+            title: {
                 display: true,
-                // todo: figure out whether to have constant time increments, or constant space between points
-                // scaleLabel: {
-                //     display: true,
-                //     labelString: 'Date',
-                //     lineHeight: 5,
-                //     fontSize:20,
-                //     fontFamily:"Merriweather Sans"
-                // },
-                ticks: {
-                    source: 'data',
-                    fontFamily:"Merriweather Sans",
-                    fontSize:16,
-                    callback: function (value, index, values) {
-                        return value.slice(0, 10);
-                    }
-                }
-            }],
-            yAxes: [{
-
-                display: true,
-                ticks: {
-                    min: -1,
-                    max: 1,
-                },
-                scaleLabel: {
+                fontSize: 30,
+                text: 'Sentiment score over time (hover for article title)',
+            },
+            legend: {
+                display: false,
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        displayFormats: {
+                            day: 'MMM DD YYYY'
+                        }
+                    },
                     display: true,
-                    labelString: 'Sentiment Score',
-                    fontSize:20,
-                    fontFamily:"Merriweather Sans"
-                },
-                ticks: {
-                    fontFamily:"Merriweather Sans",
-                    fontSize: 18,
-                }
-            }]
-        },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 20,
+                        minTicksLimit: 20,
+                        maxRotation: 45,
+                        minRotation: 45,
+                        source: 'data',
+                        fontFamily: "Merriweather Sans",
+                        fontSize: 16,
+                    }
+                }],
+                yAxes: [{
+
+                    display: true,
+                    ticks: {
+                        min: -1,
+                        max: 1,
+                        fontFamily: "Merriweather Sans",
+                        fontSize: 18,
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Sentiment Score',
+                        fontSize: 20,
+                        fontFamily: "Merriweather Sans"
+                    },
+                }]
+            },
+        }
+
+
+    };
+    chart = new Chart(ctx, chartOptions);
+
+    btns = document.querySelectorAll('.filter-btn');
+
+    for (let i = 0; i < btns.length; i++) {
+        btns[i].addEventListener('click', function (event) {
+            modifyButtons(btns[i].id);
+            toggleView(btns[i].id);
+        });
     }
 
+    document.querySelector('.filter-btn').addEventListener('click', function (event) {
+        modifyButtons(this.id);
+        toggleView(this.id);
+    });
 
-};
-let chart = new Chart(ctx, chartOptions);
 
-let bidenData = $.get('/candidate/biden');
-let trumpData = $.get('/candidate/trump');
-let sandersData = $.get('/candidate/sanders');
-let warrenData = $.get('/candidate/warren');
-let buttigiegData = $.get('/candidate/buttigieg');
-let harrisData = $.get('/candidate/harris');
-let cnnData = $.get('/news/cnn');
-let mytData = $.get('/news/nyt');
-let foxData = $.get('/news/fox)');
+    set_candidates_data('trump', 'cnn', showDataset);
+    CANDIDATES.forEach(candidate => {
+            plotting_data[candidate] = {};
+            NEWS_KEYS.forEach(news => {
+                set_candidates_data(candidate, news);
+            })
+        });
+
+
+});
+
+
 let classifiers = {};
 classifiers[TEXTBLOB] = {};
 classifiers[VADER] = {};
@@ -171,54 +179,36 @@ classifiers[BERT] = {};
 let titles = [];
 let dates = [];
 
-
-function add_dataset_from_request(results, candidate) {
-    plotting_data[candidate] = {};
-    let list_results = turn_to_array(results);
-    NEWS_KEYS.forEach(function (n) {
-        plotting_data[candidate][n] = {};
-        MODEL_KEYS.forEach(function (m) {
-            plotting_data[candidate][n][m] = list_results[n][m];
+async function setup(){
+    CANDIDATES.forEach(candidate => {
+            plotting_data[candidate] = {};
+            NEWS_KEYS.forEach(news => {
+                set_candidates_data(candidate, news);
+            })
         });
-        plotting_data[candidate][n][DATETIME_KEY] = list_results[n][DATETIME_KEY];
-        plotting_data[candidate][n][TITLE_KEY] = list_results[n][TITLE_KEY];
-        plotting_data[candidate][n][URL_KEY] = list_results[n][URL_KEY];
-    });
-    add_datasets(candidate);
+    showDataset('trump', 'cnn');
+}
+
+function loading_data(){
+
 }
 
 
-bidenData.done(function (results) {
-    add_dataset_from_request(results, BIDEN);
-});
-trumpData.done(function (results) {
-    add_dataset_from_request(results, TRUMP);
-    showDataset(TRUMP, CNN_KEY, TEXTBLOB_SCORE_KEY);
-});
-sandersData.done(function (results) {
-    add_dataset_from_request(results, SANDERS);
-});
-warrenData.done(function (results) {
-    add_dataset_from_request(results, WARREN);
-});
-buttigiegData.done(function (results) {
-    add_dataset_from_request(results, BUTTIGIEG);
-});
-harrisData.done(function (results) {
-    add_dataset_from_request(results, HARRIS);
-});
-cnnData.done(function (results) {
+function set_candidates_data(candidate, news_group, callback_) {
+    axios.get('/averages?candidate=' + candidate + "&news_co=" + news_group)
+        .then(function (response) {
 
-});
-mytData.done(function (results) {
+            console.log(response);
+            plotting_data[candidate][news_group] = response.data;
 
-});
-foxData.done(function (results) {
+            add_datasets(candidate, news_group);
+            if (callback_ ) {
+                callback_(candidate, news_group);
+            }
+        });
+}
 
-});
-
-
-function roundToTwo(num) {
+function round_to_three(num) {
     return +(Math.round(num + "e+3") + "e-3");
 }
 
@@ -227,8 +217,12 @@ function setLabels(candidate, news_co_key) {
 }
 
 function showDataset(candidate, news_co, model, toggle) {
+    if (!model) {
+        model = 'bert'
+    }
+
     news_co = news_co.replace('-', ' ');
-    model = model.replace('-', ' ');
+    // model = model.replace('-', ' ');
     setLabels(candidate, news_co);
 
     chart.data.datasets.forEach(ds => {
@@ -243,22 +237,18 @@ function showDataset(candidate, news_co, model, toggle) {
     chart.update();
 }
 
-function add_datasets(candidate) {
-    NEWS_COMPANY_KEYS.forEach(n => {
-        MODEL_KEYS.forEach(m => {
-            chart.data.datasets.push({
-                label: candidate + '-' + n + '-' + m,
-                // todo: remove when all candidates work
-                data: plotting_data[candidate][n][m],
-                borderColor: "rgba(248, 51, 60, 1)",
-                hidden: true,
-                fill: false,
-                titles: plotting_data[candidate][n]['title'],
-                news_co: n,
-                pointRadius: 4,
-                pointHitRadius: 6,
-                pointBackgroundColor: LINE_COLORS[ALL_NEWS_GROUPS],
-            });
+function add_datasets(candidate, news_group) {
+    MODEL_KEYS.forEach(m => {
+        chart.data.datasets.push({
+            label: candidate + '-' + news_group + '-' + m,
+            // todo: remove when all candidates work
+            data: plotting_data[candidate][news_group][m],
+            borderColor: "rgba(248, 51, 60, 1)",
+            hidden: true,
+            fill: false,
+            pointRadius: 4,
+            pointHitRadius: 6,
+            pointBackgroundColor: LINE_COLORS[ALL_NEWS_GROUPS],
         });
 
     });
@@ -328,10 +318,11 @@ function modifyButtons(btn_id) {
     btn.classList.remove(outline);
 }
 
-$(".filter-btn").click(function () {
-    modifyButtons(this.id);
-    toggleView(this.id);
-});
+
+// $(".filter-btn").click(function () {
+//     modifyButtons(this.id);
+//     toggleView(this.id);
+// });
 
 
 //Starting date should be a Date object
@@ -413,3 +404,8 @@ function turn_to_array(response) {
     }
     return dict_of_lists;
 }
+
+
+
+
+
