@@ -103,3 +103,16 @@ class Weekly(db.Model):
     lstm = db.Column(db.Float)
     vader = db.Column(db.Float)
     textblob = db.Column(db.Float)
+
+
+class Tabulator(db.Model):
+
+    title = db.Column(db.Text, primary_key=True)
+    url = db.Column(db.Text)
+    candidate = db.Column(db.Text)
+    news_co = db.Column(db.Text)
+    datetime = db.Column(db.DateTime)
+    bert = db.Column(db.Float)
+    lstm = db.Column(db.Float)
+    vader = db.Column(db.Float)
+    textblob = db.Column(db.Float)
