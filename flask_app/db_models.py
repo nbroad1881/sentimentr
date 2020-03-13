@@ -41,27 +41,6 @@ class DBArticle(db.Model):
     text = db.Column(db.Text)
     candidate = db.Column(db.String(15))
 
-    vader_14day_avg = db.Column(db.Float)
-    textblob_14day_avg = db.Column(db.Float)
-    lstm_14day_avg = db.Column(db.Float)
-    bert_14day_avg = db.Column(db.Float)
-
-    vader_p_pos = db.Column(db.Float)
-    vader_p_neg = db.Column(db.Float)
-    vader_p_neu = db.Column(db.Float)
-    vader_compound = db.Column(db.Float)
-
-    textblob_p_pos = db.Column(db.Float)
-    textblob_p_neg = db.Column(db.Float)
-
-    lstm_p_neu = db.Column(db.Float)
-    lstm_p_pos = db.Column(db.Float)
-    lstm_p_neg = db.Column(db.Float)
-
-    bert_p_neu = db.Column(db.Float)
-    bert_p_pos = db.Column(db.Float)
-    bert_p_neg = db.Column(db.Float)
-
 descriptions = DBArticle().query.column_descriptions[0]['entity'].__dict__.keys()
 
 # get rid of dunder variables (__tablename__, __module__, etc.)
