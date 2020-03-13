@@ -67,12 +67,47 @@
     </div>
 
     <div class="container">
-        <div class="row justify-content-center">
-                <div class="col-lg-8 text-center my-5">
+        <h3 class="text-center mb-3">Recent Articles</h3>
 
-                    <h4 class="text-dark my-5 ">While the data is a bit hectic, This is a work in progress and there are many potential avenues to take this. The first path would be to hand-label more data to see if the LSTM and BERT could get even better. Another possible route would be to try looking at the entire article. </h4>
-                </div>
-            </div>
+        <div id="candidate-selector-table" class="text-center my-2">
+            <input type="button" id="trump-table"
+                   class="mx-1  btn btn-secondary d-inline filter-btn ui-button selected-feature candidate-btn"
+                   value="Donald Trump"/>
+            <input type="button" id="biden-table"
+                   class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
+                   value="Joe Biden"/>
+            <input type="button" id="warren-table"
+                   class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
+                   value="Elizabeth Warren"/>
+            <input type="button" id="sanders-table"
+                   class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
+                   value="Bernie Sanders"/>
+            <input type="button" id="harris-table"
+                   class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
+                   value="Kamala Harris"/>
+            <input type="button" id="buttigieg-table"
+                   class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
+                   value="Pete Buttigieg"/>
+        </div>
+
+        <table class="table thead-dark table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Candidate</th>
+            <th scope="col">News Source</th>
+            <th scope="col">Title</th>
+            <th scope="col">Date</th>
+            <th scope="col">TextBlob Score</th>
+            <th scope="col">VADER Score</th>
+            <th scope="col">LSTM Score</th>
+            <th scope="col">BERT Score</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
     </div>
 
 </section>
