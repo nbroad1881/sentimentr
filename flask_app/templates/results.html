@@ -1,11 +1,6 @@
 <section class="page-section bg-white pt-4" id='results'>
     <div class="container">
         <h2 class="text-center mt-0">Results</h2>
-        {#        todo: have a spot for users to input a sample sentence#}
-        {#                  Date Start: <input type="date" name="date-start">#}
-        {#                  Date End: <input type="date" name="date-end">#}
-        {#                    Sample Sentence: <input type="text" name="sample" id="text-field">#}
-        {#                  <label class='btn btn-dark text-center' id="text-button">Submit</label><br>#}
         <hr class="divider bg-dark">
 
         <!-- models Section -->
@@ -14,56 +9,52 @@
 
     <div id="update-nav" class="my-2">
         <div id="model-selector" class="text-center my-2">
-            <input type="button" id="TextBlob"
+            <input type="button" id="textblob"
                    class="mx-1  btn btn-outline-primary d-inline filter-btn ui-button model-btn"
                    value="TextBlob"/>
-            <input type="button" id="VADER"
+            <input type="button" id="vader"
                    class="mx-1  btn btn-outline-primary d-inline filter-btn ui-button model-btn" value="VADER"/>
-            <input type="button" id="LSTM"
+            <input type="button" id="lstm"
                    class="mx-1  btn btn-outline-primary d-inline filter-btn ui-button model-btn" value="LSTM"/>
-            <input type="button" id="BERT"
+            <input type="button" id="bert"
                    class="mx-1  btn btn-primary d-inline filter-btn ui-button model-btn selected-feature" value="BERT"/>
-            {#                <input type="button" id="all-models" class="mx-1 my-2 btn btn-outline-primary btn-outline-primary d-inline filter-btn ui-button model-btn" value="All Models"/>#}
         </div>
-        <div id="candidate-selector" class="text-center my-2">
-            <input type="button" id="trump"
+        <div id="candidate-selector-chart" class="text-center my-2">
+            <input type="button" id="trump-chart"
                    class="mx-1  btn btn-secondary d-inline filter-btn ui-button selected-feature candidate-btn"
                    value="Donald Trump"/>
-            <input type="button" id="biden"
+            <input type="button" id="biden-chart"
                    class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
                    value="Joe Biden"/>
-            <input type="button" id="warren"
+            <input type="button" id="warren-chart"
                    class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
                    value="Elizabeth Warren"/>
-            <input type="button" id="sanders"
+            <input type="button" id="sanders-chart"
                    class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
                    value="Bernie Sanders"/>
-            <input type="button" id="harris"
+            <input type="button" id="harris-chart"
                    class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
                    value="Kamala Harris"/>
-            <input type="button" id="buttigieg"
+            <input type="button" id="buttigieg-chart"
                    class="mx-1  btn btn-outline-secondary d-inline filter-btn ui-button candidate-btn"
                    value="Pete Buttigieg"/>
         </div>
 
         <div id="news-co-selector" class="text-center my-2">
-            <input type="button" id="CNN"
+            <input type="button" id="cnn"
                    class="mx-1 btn btn-success d-inline ui-button news-btn filter-btn  selected-feature"
                    value="CNN"/>
-            <input type="button" id="Fox-News"
+            <input type="button" id="fox-news"
                    class="mx-1 btn btn-outline-success d-inline ui-button news-btn filter-btn" value="Fox News"/>
-            <input type="button" id="The-New-York-Times"
+            <input type="button" id="the-new-york-times"
                    class="mx-1 btn btn-outline-success d-inline news-btn filter-btn ui-button"
                    value="New York Times"/>
-            {#                <input type="button" id="all-news" class="mx-1 my-2 btn btn-outline-success d-inline  ui-button news-btn filter-btn" value="All Three"/>#}
         </div>
 
         <!-- CHART -->
-        <div class="d-flex justify-content-center mx-auto mb-5 pb-5">
-            <div style="position: relative; height:60vh; width:90vw">
-                <canvas class="p-0" id="myChart" style="background-color: white"></canvas>
+            <div class="d-flex justify-content-center mx-auto mb-5" style="position: relative; height: 30vw; width:75vw">
+                <canvas class="mb-4 mx-2" id="myChart" style="background-color: white"></canvas>
             </div>
-        </div>
     </div>
 
     <div class="container">
