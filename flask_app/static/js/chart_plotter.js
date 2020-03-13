@@ -307,20 +307,6 @@ function modifyButtons(btn_id) {
     btn.classList.remove(outline);
 }
 
-
-// $(".filter-btn").click(function () {
-//     modifyButtons(this.id);
-//     toggleView(this.id);
-// });
-
-
-//Starting date should be a Date object
-function make_date_list(starting_date, number_of_days) {
-    if (starting_date === null) {
-        starting_date = new Date();
-    }
-]
-
 function generate_table() {
     let table = document.querySelector('.table').getElementsByTagName('tbody')[0];
     axios.get('/table')
