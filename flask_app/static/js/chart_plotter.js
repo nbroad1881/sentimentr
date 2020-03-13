@@ -76,13 +76,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
         },
 
         options: {
+
+            spanGaps:true,
+            maintainAspectRatio: false,
+
             tooltips: {
                 callbacks: {
                     title: function (tooltipItem, data) {
                         return round_to_three(tooltipItem[0].value);
                     },
                     label: function (tooltipItem, data) {
-                        date = new Date(tooltipItem.label);
+                        let date = new Date(tooltipItem.label);
                         return date.toDateString();
                     },
                 },
@@ -96,33 +100,36 @@ document.addEventListener('DOMContentLoaded', (event) => {
             title: {
                 display: true,
                 fontSize: 30,
-                text: 'Sentiment score over time (hover for article title)',
+                text: "Average Weekly Score over Time"
             },
             legend: {
                 display: false,
             },
+            scaleShowValues: true,
             scales: {
                 xAxes: [{
+                    distribution:'linear',
                     type: 'time',
                     time: {
                         displayFormats: {
-                            day: 'MMM DD YYYY'
-                        }
+                            month: 'MMM YYYY'
+                        },
+
                     },
                     display: true,
                     ticks: {
+                        min: new Date('2019-06-01'),
+                        max: new Date(),
                         autoSkip: true,
                         maxTicksLimit: 20,
-                        minTicksLimit: 20,
                         maxRotation: 45,
                         minRotation: 45,
-                        source: 'data',
+                        source: 'auto',
                         fontFamily: "Merriweather Sans",
                         fontSize: 16,
                     }
                 }],
                 yAxes: [{
-
                     display: true,
                     ticks: {
                         min: -1,
@@ -153,56 +160,34 @@ document.addEventListener('DOMContentLoaded', (event) => {
         });
     }
 
-    document.querySelector('.filter-btn').addEventListener('click', function (event) {
-        modifyButtons(this.id);
-        toggleView(this.id);
-    });
-
 
     set_candidates_data('trump', 'cnn', showDataset);
     CANDIDATES.forEach(candidate => {
-            plotting_data[candidate] = {};
-            NEWS_KEYS.forEach(news => {
-                set_candidates_data(candidate, news);
-            })
-        });
+        plotting_data[candidate] = {};
+        NEWS_KEYS.forEach(news => {
+            set_candidates_data(candidate, news);
+        })
+    });
 
+    generate_table();
 
 });
-
-
-let classifiers = {};
-classifiers[TEXTBLOB] = {};
-classifiers[VADER] = {};
-classifiers[LSTM] = {};
-classifiers[BERT] = {};
-let titles = [];
-let dates = [];
-
-async function setup(){
-    CANDIDATES.forEach(candidate => {
-            plotting_data[candidate] = {};
-            NEWS_KEYS.forEach(news => {
-                set_candidates_data(candidate, news);
-            })
-        });
-    showDataset('trump', 'cnn');
-}
-
-function loading_data(){
-
-}
-
 
 function set_candidates_data(candidate, news_group, callback_) {
     axios.get('/averages?candidate=' + candidate + "&news_co=" + news_group)
         .then(function (response) {
 
-            console.log(response);
             plotting_data[candidate][news_group] = response.data;
+            let dt_arr = [];
+            response.data[DATETIME_KEY].forEach( dt => {
+                let new_dt = new Date(dt);
+                dt_arr.push(new_dt);
+            });
+
+            plotting_data[candidate][news_group][DATETIME_KEY] = dt_arr;
 
             add_datasets(candidate, news_group);
-            if (callback_ ) {
+            if (callback_) {
                 callback_(candidate, news_group);
             }
         });
@@ -212,7 +197,7 @@ function round_to_three(num) {
     return +(Math.round(num + "e+3") + "e-3");
 }
 
-function setLabels(candidate, news_co_key) {
+function set_labels(candidate, news_co_key) {
     chart.data.labels = plotting_data[candidate][news_co_key][DATETIME_KEY];
 }
 
@@ -221,27 +206,31 @@ function showDataset(candidate, news_co, model, toggle) {
         model = 'bert'
     }
 
-    news_co = news_co.replace('-', ' ');
-    // model = model.replace('-', ' ');
-    setLabels(candidate, news_co);
+    news_co = news_co.replace(/-/g, ' ');
+    if (candidate.includes('-')) {
+        candidate = candidate.slice(0, candidate.indexOf('-'));
+    }
+    set_labels(candidate, news_co);
 
-    chart.data.datasets.forEach(ds => {
-        if (ds.label === candidate + '-' + news_co + '-' + model) {
-            if (toggle) {
-                ds['hidden'] = !ds['hidden'];
-            } else {
-                ds.hidden = false;
-            }
-        }
+    chart.data.datasets = [{
+        data: plotting_data[candidate][news_co][model],
+        borderColor: "rgba(248, 51, 60, 1)",
+        hidden: false,
+        fill: false,
+        pointRadius: 4,
+        pointHitRadius: 6,
+        pointBackgroundColor: LINE_COLORS[ALL_NEWS_GROUPS],
+    }];
+
+
+    chart.update({
+        duration: 800,
     });
-    chart.update();
 }
 
 function add_datasets(candidate, news_group) {
     MODEL_KEYS.forEach(m => {
         chart.data.datasets.push({
-            label: candidate + '-' + news_group + '-' + m,
-            // todo: remove when all candidates work
             data: plotting_data[candidate][news_group][m],
             borderColor: "rgba(248, 51, 60, 1)",
             hidden: true,
@@ -256,32 +245,28 @@ function add_datasets(candidate, news_group) {
 }
 
 function toggleView(btn_id) {
+
+    if (btn_id.includes('table')) {
+        let candidate = btn_id.slice(0, btn_id.indexOf('-'));
+        switch_table_candidate(candidate);
+        return
+    }
+
     chart.data.datasets.forEach(ds => {
         ds.hidden = true;
     });
 
-    let active_btns = document.querySelectorAll('.selected-feature');
-    let model;
-    let candidate;
-    let news_co;
-
-    for (let i = 0; i < active_btns.length; i++) {
-        if (active_btns[i].classList.contains('model-btn')) {
-            model = LABEL_TO_KEY[active_btns[i].id];
-        } else if (active_btns[i].classList.contains('candidate-btn')) {
-            candidate = active_btns[i].id;
-        } else if (active_btns[i].classList.contains('news-btn')) {
-            news_co = LABEL_TO_KEY[active_btns[i].id];
-        }
-    }
+    let model = document.querySelector(".filter-btn.selected-feature.model-btn").id;
+    let candidate = document.querySelector(".filter-btn.selected-feature.candidate-btn").id;
+    let news_co = document.querySelector(".filter-btn.selected-feature.news-btn").id;
 
     showDataset(candidate, news_co, model, false);
-    chart.update();
 }
 
-let primary_button_ids = ['TextBlob', 'LSTM', 'VADER', 'BERT', 'all-models'];
-let dark_button_ids = ['trump', 'biden', 'warren', 'harris', 'sanders', 'buttigieg'];
-let success_button_ids = ['CNN', 'The-New-York-Times', 'Fox-News'];
+let primary_button_ids = ['textblob', 'lstm', 'vader', 'bert'];
+let candidate_chart_ids = ['trump-chart', 'biden-chart', 'warren-chart', 'harris-chart', 'sanders-chart', 'buttigieg-chart'];
+let candidate_table_ids = ['trump-table', 'biden-table', 'warren-table', 'harris-table', 'sanders-table', 'buttigieg-table'];
+let success_button_ids = ['cnn', 'the-new-york-times', 'fox-news'];
 
 function modifyButtons(btn_id) {
     let highlight = "btn-";
@@ -291,14 +276,18 @@ function modifyButtons(btn_id) {
         highlight += 'primary';
         outline += 'primary';
         parentSelector = '#model-selector';
-    } else if (dark_button_ids.includes(btn_id)) {
+    } else if (candidate_chart_ids.includes(btn_id)) {
         highlight += 'secondary';
         outline += 'secondary';
-        parentSelector = '#candidate-selector';
+        parentSelector = '#candidate-selector-chart';
     } else if (success_button_ids.includes(btn_id)) {
         highlight += 'success';
         outline += 'success';
         parentSelector = '#news-co-selector';
+    } else if (candidate_table_ids.includes(btn_id)) {
+        highlight += 'secondary';
+        outline += 'secondary';
+        parentSelector = '#candidate-selector-table';
     }
 
     let buttons = document.querySelector(parentSelector).children;
@@ -330,82 +319,62 @@ function make_date_list(starting_date, number_of_days) {
     if (starting_date === null) {
         starting_date = new Date();
     }
-    let date_array = [];
-    for (let i = 0; i < number_of_days; i++) {
-        new_date = new Date();
-        new_date.setUTCDate(starting_date.getUTCDate() - i);
-        date_array.push(new_date);
-    }
-    return date_array;
+]
+
+function generate_table() {
+    let table = document.querySelector('.table').getElementsByTagName('tbody')[0];
+    axios.get('/table')
+        .then(function (response) {
+            table_data = response.data;
+            for (let element of table_data) {
+                if (element['candidate'] !== 'Trump') {
+                    continue;
+                }
+                let row = table.insertRow();
+                const columns = ['candidate', 'news_co', 'title', 'datetime', 'textblob', 'vader', 'lstm', 'bert'];
+                columns.forEach(col_name => {
+                    let cell = row.insertCell();
+                    let text;
+                    if (col_name === 'datetime') {
+                        let dt = new Date(element[col_name]);
+                        text = document.createTextNode(dt.toDateString().slice(3));
+                    } else {
+                        text = document.createTextNode(element[col_name]);
+                    }
+                    cell.appendChild(text);
+                });
+            }
+        });
 }
 
-function get_date_indices(starting_date, date_array, num_days) {
-    let first_index = -1;
-    let second_index = date_array.length;
-    let second_date = new Date();
-    second_date.setUTCDate(starting_date.getUTCDate() - num_days);
-    for (let i = 0; i < date_array.length; i++) {
-        // check for same year, month, day
-        let correct_day = (starting_date.getUTCDate() === date_array[i].getUTCDate());
-        let correct_month = (starting_date.getUTCMonth() === date_array[i].getUTCMonth());
-        let correct_year = (starting_date.getUTCFullYear() === date_array[i].getUTCFullYear());
-        if (correct_day && correct_month && correct_year) {
-            first_index = i;
-        }
+function switch_table_candidate(candidate) {
+    let whole_table = document.querySelector('table');
+
+    let table = document.querySelector('.table').getElementsByTagName('tbody')[0];
+    for (let i = 0; i < 5; i++) {
+        table.deleteRow(0);
     }
-    if (first_index !== -1) {
-        last_date = date_array[date_array.length - 1];
-        //if last date is within range of requested days
-        if (last_date < second_date) {
-            second_index = first_index + num_days;
+    for (let element of table_data) {
+        if (element['candidate'].toLowerCase() !== candidate) {
+            continue;
         }
 
+        let row = table.insertRow();
+        const columns = ['candidate', 'news_co', 'title', 'datetime', 'textblob', 'vader', 'lstm', 'bert'];
+        columns.forEach(col_name => {
+            let cell = row.insertCell();
+            let text;
+            if (col_name === 'datetime') {
+                let dt = new Date(element[col_name]);
+                text = document.createTextNode(dt.toDateString().slice(3));
+            } else {
+                text = document.createTextNode(element[col_name]);
+            }
+            cell.appendChild(text);
+        });
+
+
     }
-    return [first_index, second_index];
+
 }
-
-
-//Get request gives list of dicts, want dict of lists
-function turn_to_array(response) {
-    let dict_of_lists = {};
-
-    for (let [news_co, score_list] of Object.entries(response)) {
-
-        let textblob_scores = [];
-        let vader_scores = [];
-        let lstm_scores = [];
-        let bert_scores = [];
-
-        let dates = [];
-        let titles = [];
-        let urls = [];
-
-        for (let i = 0; i < score_list.length; i++) {
-            let article_scores = score_list[i];
-            textblob_scores.push(article_scores['textblob_p_pos'] - article_scores['textblob_p_neg']);
-            vader_scores.push(article_scores['vader_p_pos'] - article_scores['vader_p_neg']);
-            lstm_scores.push(article_scores['lstm_p_pos'] - article_scores['lstm_p_neg']);
-            bert_scores.push(article_scores['bert_p_pos'] - article_scores['bert_p_neg']);
-
-            dates.push(article_scores['datetime']);
-            titles.push(article_scores['title']);
-            urls.push(article_scores['url']);
-        }
-
-        dict_of_lists[news_co] = {
-            'textblob_score': textblob_scores,
-            'vader_score': vader_scores,
-            'lstm_score': lstm_scores,
-            'bert_score': bert_scores,
-            'datetime': dates,
-            'title': titles,
-            'url': urls,
-        };
-    }
-    return dict_of_lists;
-}
-
-
-
-
 
