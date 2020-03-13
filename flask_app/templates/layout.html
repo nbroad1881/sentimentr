@@ -42,16 +42,17 @@
     <!-- Theme CSS - Includes Bootstrap -->
     <link href="{{ url_for('static', filename='css/creative.css') }}" rel="stylesheet">
 
-{#    {% if title=='home' %}#}
+    {% if title=='home' %}
         <!--    Chart JS    -->
-        <script type="text/javascript" src="{{ url_for('static', filename='vendor/chart/Chart.bundle.min.js') }}"></script>
+        <script type="text/javascript"
+                src="{{ url_for('static', filename='vendor/chart/Chart.bundle.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/axios.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/chart_plotter.js') }}"></script>
         {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>#}
         {#    <script src="https://code.jquery.com/jquery-3.4.1.min.js"#}
         {#            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="#}
         {#            crossorigin="anonymous"></script>#}
-{#    {% endif %}#}
+    {% endif %}
 
 </head>
 <body id="pageTop">
@@ -137,7 +138,6 @@
     </div>
 </section>
 
-<!-- Copyright -->
 <!-- Bootstrap core JavaScript -->
 <script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
 <!--{#<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js'#}-->
