@@ -8,18 +8,19 @@ from dotenv import load_dotenv
 from sqlalchemy.exc import IntegrityError
 
 from flask_app import app, db
-from flask_app.db_models import DBArticle, DBScore, COLUMN_NAMES, Weekly
-from flask_app.schemas import ArticleSchema, ScoreSchema, WeeklySchema
+from flask_app.db_models import DBArticle, DBScore, COLUMN_NAMES, Weekly, Tabulator
+from flask_app.schemas import ScoreSchema, WeeklySchema, TabulatorSchema
 from sentinews.models import (VaderAnalyzer,
                               LSTMAnalyzer,
                               TextBlobAnalyzer,
                               BERTAnalyzer)
 
-articleSchema = ArticleSchema()
-articlesSchema = ArticleSchema(many=True)
+# articleSchema = ArticleSchema()
+# articlesSchema = ArticleSchema(many=True)
 weeklySchema = WeeklySchema(many=True)
 
 scoresSchemas = ScoreSchema(many=True)
+tabulatorSchema = TabulatorSchema(many=True)
 
 load_dotenv()
 logging.basicConfig(level=logging.DEBUG)
@@ -33,21 +34,6 @@ DB_SELECT_COLUMNS = os.environ['DB_SELECT_COLUMNS']
 # tb = TextBlobAnalyzer()
 # lstm = LSTMAnalyzer()
 # bert = BERTAnalyzer()
-
-COLUMNS_TO_QUERY = [
-    DBArticle.url,
-    DBArticle.datetime,
-    DBArticle.title,
-    DBArticle.news_co,
-    DBArticle.vader_p_pos,
-    DBArticle.vader_p_neg,
-    DBArticle.textblob_p_pos,
-    DBArticle.textblob_p_neg,
-    DBArticle.lstm_p_pos,
-    DBArticle.lstm_p_neg,
-    DBArticle.bert_p_pos,
-    DBArticle.bert_p_neg,
-]
 
 DEFAULT_NUM_TO_QUERY = 20
 
@@ -65,140 +51,6 @@ def models():
     return render_template("models.html", title='models'), 200
 
 
-@app.route("/urls", methods=["GET"])
-def urls():
-    """
-    Get all the urls in the database
-    :return:
-    :rtype:
-    """
-    if check_password(request.headers) is False:
-        return "Unauthorized", 401
-    articles = DBArticle.query.with_entities(DBArticle.url, DBArticle.title).all()
-    return articlesSchema.jsonify(articles, many=True), 200
-
-
-@app.route("/article/", methods=['GET', 'POST', 'PUT'])
-def article_route():
-    """
-    Get, post, and put to retrieve, modify, or insert a single article or many articles.
-    Requests must specify in parameters the desired candidate, news company, and whether
-    the article is an opinion piece or not.
-    Possible parameters
-    candidate: string of candidate's name (e.g. Biden, Harris)
-    news: string of news company (e.g. New York, Fox, CNN)
-    opinion: True/False
-    :return:
-    :rtype:
-    """
-    args = request.args.to_dict()
-    if args is None:
-        logging.debug(f"No parameters given: {args}")
-        return "No parameters given", 400
-
-    if check_password(request.headers) is False:
-        return "Unauthorized", 401
-
-    # Pull one article from the database by finding matching url
-    if request.method == 'GET':
-
-        # make sure url parameter passed
-        if 'url' in args:
-            # returns None if not in database
-            article = DBArticle.query.filter_by(url=args['url']).first()
-            if article:
-                return articleSchema.dump(article), 200
-            return 'Url not found', 404
-
-        query_results = query_database(candidate=args.get('candidate'),
-                                       news=args.get('news'),
-                                       opinion=args.get('opinion'))
-        # If the query finds anything
-        if query_results:
-            return articlesSchema.jsonify(query_results, many=True), 200
-        return 'Invalid parameters', 400
-
-    # Create new article in database
-    if request.method == 'POST':
-
-        parameters = {}
-        # Make sure they include the right parameters
-        for col in COLUMN_NAMES:
-            if col not in args:
-                logging.debug(f"Invalid parameters to post request: {args}")
-                return 'Invalid parameters', 400
-            parameters[col] = args[col]
-
-        # Check if the article is already in the database
-        if DBArticle.query.filter_by(url=args['url']).first():
-            return 'Already exists, use PUT to update', 409
-
-        # All validations passed, create article and add to database
-        article = articleSchema.load(args)
-        db.session.add(article)
-        db.session.commit()
-        return 'Article added successfully', 201
-
-    if request.method == 'PUT':
-        # returns None if not in database
-        article = DBArticle.query.filter_by(url=args['url']).first()
-        if article is None:
-            return "Use POST to add a new article", 403
-        update_article_fields(article, **args)
-        db.session.commit()
-        return "Article successfully updated", 200
-
-    # todo: Probably a bad idea to make this publicly available.
-    # if request.method == 'DELETE':
-    #     result = DBArticle.query.filter_by(url=args['url']).delete()
-    #     db.session.commit()
-    #     if result:
-    #         return "Successfully deleted", 200
-    #     return "Nothing to delete with specified url.", 204
-
-    logging.debug(f"Invalid request: {args}")
-    return "Invalid request. Use GET, POST, PUT with good parameters.", 400
-
-
-@app.route("/analyze/<model>", methods=["GET", "POST"])
-def analyze(model):
-    if request.method == "POST":
-        if model == 'all':
-            args = request.args.to_dict()
-
-            if check_password(request.headers) is False:
-                return "Unauthorized", 401
-
-            title = args['title']
-            va_scores = va.evaluate(title)
-            tb_scores = tb.evaluate(title)
-            lstm_scores = lstm.evaluate(title)
-
-            # todo: consider using dict unpacking **dict
-            # create article object
-            article = DBArticle(
-                url=args['url'],
-                datetime=isoparse(args['datetime']),
-                title=args['title'],
-                news_co=args['news_co'],
-                text=args['text'],
-                vader_p_pos=va_scores['p_pos'],
-                vader_p_neg=va_scores['p_neg'],
-                vader_p_neu=va_scores['p_neu'],
-                vader_compound=va_scores['compound'],
-                textblob_p_pos=tb_scores['p_pos'],
-                textblob_p_neg=tb_scores['p_neg'],
-                lstm_p_neu=lstm_scores['p_neu'],
-                lstm_p_pos=lstm_scores['p_pos'],
-                lstm_p_neg=lstm_scores['p_neg'])
-
-            # Log to db, will fail if there is already an article with the same url.
-            try:
-                db.session.add(article)
-            except IntegrityError as e:
-                logging.info(f"Could not add to database error: {e}")
-            db.session.commit()
-            return articleSchema.dump(article), 200
 
 
 def update_article_fields(article, **kwargs):
@@ -216,50 +68,6 @@ def update_article_fields(article, **kwargs):
     if 'lstm_p_pos' in keys: article.lstm_p_pos = kwargs['lstm_p_pos']
     if 'lstm_p_neu' in keys: article.lstm_p_neu = kwargs['lstm_p_neu']
     if 'lstm_p_neg' in keys: article.lstm_p_neg = kwargs['lstm_p_neg']
-
-
-@app.route('/candidate/<name>', methods=['GET'])
-def candidate(name):
-    # todo: might need another http code
-    all_results = {}
-    args = request.args.to_dict()
-    for news, key in [('CNN', 'cnn'), ('Times', 'the new york times'), ('Fox', 'fox news')]:
-        query_results = query_database(candidate=name,
-                                       news=news,
-                                       opinion=args.get('opinion'))
-        all_results[key] = articlesSchema.dump(query_results, many=True)
-    if all_results:
-        return all_results, 200
-    return "No results found", 400
-
-
-@app.route('/everything/<candidate>')
-def everything(candidate):
-    if check_password(request.headers) is False:
-        return "Unauthorized", 401
-    else:
-        query = DBArticle.query
-
-        return articlesSchema.jsonify(query.filter(DBArticle.title.ilike(f"%{candidate}%")).all(), many=True)
-
-
-@app.route('/news/<name>', methods=['GET'])
-def news_co(name):
-    """
-    Get resutls
-    :param name:
-    :type name:
-    :return:
-    :rtype:
-    """
-    all_results = {}
-    for news, key in [('CNN', 'cnn'), ('Times', 'the new york times'), ('Fox', 'fox news')]:
-        query_results = query_database(candidate=None, news=news, opinion=None)
-        all_results[key] = articlesSchema.dump(query_results, many=True)
-
-    if all_results:
-        return all_results, 200
-    return "No results found", 400
 
 
 @app.errorhandler(404)
@@ -291,8 +99,6 @@ def query_database(candidate, news, opinion, all=False):
     if all:
         results = query.all()
 
-    # .with_entities(*COLUMNS_TO_QUERY).limit(100). \
-    #         filter(DBArticle.datetime > dt.now(timezone.utc) - timedelta(days=90)).all()
     results = query.order_by(DBArticle.datetime.desc()). \
         limit(100).all()
     if results:
@@ -342,13 +148,6 @@ def update_all_rows():
     return "Success", 200
 
 
-@app.route('/join')
-def join():
-    results = DBArticle.query. \
-        limit(10).all()
-    return articlesSchema.jsonify(results)
-
-
 def load_in_chunks():
     offset = 0
     chunk_size = 500
@@ -363,30 +162,6 @@ def load_in_chunks():
         else:
             break
         offset += chunk_size
-
-
-@app.route('/new_avg')
-def avg():
-    with profiled():
-        args = request.args.to_dict()
-
-        news_co = args.get('news_co', None)
-        candidate = args.get('candidate', None)
-
-        if news_co is None:
-            return "Please specify a news company", 400
-        if candidate is None:
-            return "Please specify a candidate", 400
-
-        today = dt.now(tz=timezone.utc)
-        past_limit = today - timedelta(days=90)
-        # Filter by date range, news group, and candidate
-        results = DBArticle.query. \
-            filter(DBArticle.datetime.between(past_limit, today)). \
-            filter(DBArticle.news_co.ilike(f"%{news_co}%")). \
-            filter(DBArticle.candidate.ilike(f"%{candidate}%")).all()
-
-        return articlesSchema.jsonify(results, many=True)
 
 
 @app.route('/avg_test')
@@ -473,8 +248,8 @@ def average_by_dates(candidate, news_co):
     return to_return
 
 
-@app.route('/averages')
-def lookup():
+@app.route('/weekly')
+def weekly():
 
     args = request.args.to_dict()
     news = args.get('news_co', None)
@@ -507,5 +282,20 @@ def lookup():
         'textblob': textblob,
         'datetime': datetime,
     }), 200
+
+
+@app.route("/table")
+def candidate_table():
+    all_data = []
+    for candidate in ['trump', 'biden', 'warren', 'harris', 'sanders', 'buttigieg']:
+        results = Tabulator.query.\
+            filter(Tabulator.candidate.ilike(f"%{candidate}%")).\
+            order_by(Tabulator.datetime.desc()).\
+            limit(5).all()
+        all_data.extend(tabulatorSchema.jsonify(results, many=True).json)
+
+    return jsonify(all_data)
+
+
 
 
