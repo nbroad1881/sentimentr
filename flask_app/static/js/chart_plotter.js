@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 function set_candidates_data(candidate, news_group, callback_) {
-    axios.get('/averages?candidate=' + candidate + "&news_co=" + news_group)
+    axios.get('/weekly?candidate=' + candidate + "&news_co=" + news_group)
         .then(function (response) {
 
             plotting_data[candidate][news_group] = response.data;
