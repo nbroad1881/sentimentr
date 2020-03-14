@@ -7,7 +7,7 @@ from flask import request, render_template, jsonify
 from dotenv import load_dotenv
 from sqlalchemy.exc import IntegrityError
 
-from flask_app import app, db
+from flask_app import application, db
 from flask_app.db_models import DBArticle, DBScore, COLUMN_NAMES, Weekly, Tabulator
 from flask_app.schemas import ScoreSchema, WeeklySchema, TabulatorSchema
 from sentinews.models import (VaderAnalyzer,
@@ -41,12 +41,12 @@ DEFAULT_NUM_TO_QUERY = 20
 # todo: add validation and verification for requests
 
 # todo: make table object to avoid update error (table.c)
-@app.route("/")
+@application.route("/")
 def home():
     return render_template("home.html", title='home'), 200
 
 
-@app.route("/models")
+@application.route("/models")
 def models():
     return render_template("models.html", title='models'), 200
 
@@ -70,7 +70,7 @@ def update_article_fields(article, **kwargs):
     if 'lstm_p_neg' in keys: article.lstm_p_neg = kwargs['lstm_p_neg']
 
 
-@app.errorhandler(404)
+@application.errorhandler(404)
 def page_not_found(e):
     # note that we set the 404 status explicitly
     return "Page not found! Error 404", 404
@@ -114,7 +114,7 @@ def check_password(headers):
         return pw == os.environ['AUTH_PASSWORD']
 
 
-@app.route('/update', methods=['PATCH'])
+@application.route('/update', methods=['PATCH'])
 def update_all_rows():
     if request.method != 'PATCH':
         return 'Invalid method type', 405
@@ -164,7 +164,7 @@ def load_in_chunks():
         offset += chunk_size
 
 
-@app.route('/avg_test')
+@application.route('/avg_test')
 def avg_test():
     return jsonify(average_by_dates('trump', 'cnn'))
 
@@ -248,7 +248,7 @@ def average_by_dates(candidate, news_co):
     return to_return
 
 
-@app.route('/weekly')
+@application.route('/weekly')
 def weekly():
 
     args = request.args.to_dict()
@@ -284,7 +284,7 @@ def weekly():
     }), 200
 
 
-@app.route("/table")
+@application.route("/table")
 def candidate_table():
     all_data = []
     for candidate in ['trump', 'biden', 'warren', 'harris', 'sanders', 'buttigieg']:

@@ -14,17 +14,17 @@ load_dotenv()
 logging.basicConfig(level=logging.DEBUG)
 HOURS_AGO = 8  # how many hours back should it check for recent articles
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 # For local testing
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['LOCAL_DB_URL']
+# application.config['SQLALCHEMY_DATABASE_URI'] = os.environ['LOCAL_DB_URL']
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URL']
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['RABBITMQ_URL'] = os.environ['RABBITMQ_URL']
+application.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URL']
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+application.config['RABBITMQ_URL'] = os.environ['RABBITMQ_URL']
 
 
-#  todo: make app load from config file
+#  todo: make application load from config file
 
 def make_celery(app):
     celery = Celery(
@@ -35,7 +35,7 @@ def make_celery(app):
     )
     celery.conf.update(app.config)
 
-    # Arrange for tasks to have access to the Flask app
+    # Arrange for tasks to have access to the Flask application
     TaskBase = celery.Task
 
     class ContextTask(TaskBase):
@@ -48,9 +48,9 @@ def make_celery(app):
     return celery
 
 
-celery = make_celery(app)
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
+celery = make_celery(application)
+db = SQLAlchemy(application)
+ma = Marshmallow(application)
 
 from flask_app import routes, db_models, schemas
 
