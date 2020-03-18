@@ -6,9 +6,9 @@ headline mentions one presidential candidate in the US 2020 election. Recent hea
 * [VADER](https://github.com/cjhutto/vaderSentiment) 
 * [TextBlob](https://textblob.readthedocs.io/en/dev/) 
 * LSTM
-* (In development) BERT
+* BERT
 
 
 The app is hosted at https://sentimentr.nmbroad.com. It includes an interactive graph to see the scores of recent articles for each candidate, separated by news group and sentiment analysis model.
 
-The app works by making get requests to the database to pull recent scores and then plot them using Chart.js.  The app is also in charge of periodically looking for recently published articles using Celery.
+The app works by making requests to the database to pull recent scores and then plot them using Chart.js.  The app is also in charge of periodically looking for recently published articles using Celery.
